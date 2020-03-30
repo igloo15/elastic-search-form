@@ -18,10 +18,14 @@
   },
   "homepage": "https://github.com/igloo15/elastic-search-form#readme",
   "peerDependencies": {
-    "@angular/common": "^9.0.7",
-    "@angular/core": "^9.0.7"
+    "@angular/common": "^9.1.0",
+    "@angular/core": "^9.1.0",
+    "@angular/material":"9.2.0",
+    "@ngx-formly/core": "5.5.15",
+    "@ngx-formly/material": "5.5.15"
+
   },
   "readme": "ERROR: No README data found!",
-  "_id": "@igloo15/base-angular-lib@0.2.0-dev.1",
-  "date": "Thu Mar 26 2020"
+  "_id": "@igloo15/elasticsearch-document-editor@0.2.0-dev.1",
+  "date": "Sun Mar 29 2020"
 }

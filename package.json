@@ -37,7 +37,7 @@
   },
   "homepage": "https://github.com/igloo15/basic-angular-library#readme",
   "readme": "ERROR: No README data found!",
-  "_id": "@igloo15/basic-angular-lib@0.2.0-dev.1",
+  "_id": "@igloo15/elasticsearch-document-editor@0.2.0-dev.1",
   "dependencies": {
     "@angular/animations": "^9.1.0",
     "@angular/cdk": "^9.2.0",
@@ -79,5 +79,5 @@
     "typescript": "~3.7.5",
     "write-pkg": "^4.0.0"
   },
-  "date": "Thu Mar 26 2020"
+  "date": "Sun Mar 29 2020"
 }

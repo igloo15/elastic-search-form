@@ -6,6 +6,8 @@ import { FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MaterialModule } from './modules/angular-material.module';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { FormlyModule } from '@ngx-formly/core';
+import { FormlyMaterialModule } from '@ngx-formly/material';
 
 import { AppComponent } from './app.component';
 
@@ -20,7 +22,9 @@ import { AppComponent } from './app.component';
     FlexLayoutModule,
     FormsModule,
     HttpClientModule,
-    DragDropModule
+    DragDropModule,
+    FormlyModule.forRoot(),
+    FormlyMaterialModule
   ],
   providers: [],
   bootstrap: [AppComponent],
