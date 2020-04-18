@@ -10,6 +10,8 @@ import { FormlyModule } from '@ngx-formly/core';
 import { FormlyMaterialModule } from '@ngx-formly/material';
 
 import { AppComponent } from './app.component';
+import { ElasticSearchServiceModule } from './modules/elasticsearch-module/public-api';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,9 @@ import { AppComponent } from './app.component';
     HttpClientModule,
     DragDropModule,
     FormlyModule.forRoot(),
-    FormlyMaterialModule
+    FormlyMaterialModule,
+    ElasticSearchServiceModule,
+    NgxJsonViewerModule
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -3,8 +3,7 @@
   "compilerOptions": {
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "outDir": "../../dist/app",
-    "types": []
+    "outDir": "../../dist/app"
   },
   "exclude": [
     "test.ts",
