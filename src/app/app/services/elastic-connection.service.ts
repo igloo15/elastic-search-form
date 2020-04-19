@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { Client, ConfigOptions } from 'elasticsearch-browser';
 import { ESMapping } from '../models/mapping';
 
@@ -11,6 +11,8 @@ export class ElasticConnectionService {
     host: ''
   };
 
+  public isStarted = new EventEmitter<boolean>();
+
   constructor() { }
 
   async start(url: string) {
@@ -20,19 +22,23 @@ export class ElasticConnectionService {
       this._client.cat.indices({format:'json'}, (err, resp) => {
         if(err) {
           reject(err);
+          this.isStarted.emit(false);
         } else {
           resolve(resp);
+          this.isStarted.emit(true);
         }
       });
     });
   }
 
-  async searchData<T>(index: string, term: string, from?: number): Promise<T[]> {
+  async searchData<T>(index: string, term: string, from?: number, to?: number): Promise<T[]> {
     const skip = from ?? 0;
-    const results = await this._client.search({
+    const end = to ?? 10;
+    const results = await this._client.search<T>({
       index,
+      from: skip,
+      size: end,
       body: {
-        from: skip,
         query: {
           query_string: {
             query: term
@@ -41,21 +47,27 @@ export class ElasticConnectionService {
       }
     });
 
-    return results.hits.hits.map(p => p._source) as T[];
+    return results.hits.hits.map(p => p._source);
   }
 
   async getById<T>(index: string, id: string) : Promise<T> {
-    const result = await this._client.search({
+    const result = await this._client.get<T>({
       index,
-      body: {
-        query: {
-          ids: {
-            values:[id]
-          }
-        }
-      }
+      id,
+      type: null
     });
-    return result.hits.hits[0]._source as T;
+    return result._source;
+  }
+
+  async getAll<T>(index: string, from?:number, to?:number): Promise<T[]> {
+    const skip = from ?? 0;
+    const end = to ?? 10;
+    const results = await this._client.search<T>({
+      index,
+      from: skip,
+      size: end
+    });
+    return results.hits.hits.map(p => p._source);
   }
 
   async updateData<T>(index: string, data: T, id?: string) {

@@ -1,6 +1,6 @@
 {
   "name": "@igloo15/elasticsearch-document-editor",
-  "version": "0.2.0-dev.1",
+  "version": "0.2.0-dev.3",
   "description": "A game of taking turns",
   "main": "index.js",
   "scripts": {
@@ -11,6 +11,9 @@
     "copy:readme": "cpx ./README.md ./dist/lib",
     "git:tag": "cross-var git tag v$npm_package_version",
     "build:lib": "ng build lib",
+    "build:document:lib": "ng build document-lib",
+    "build:table:lib": "ng build table-lib",
+    "build:service:lib": "ng build service-lib",
     "build:lib:prod": "ng build lib --prod",
     "build:lib:watch": "ng build lib --watch",
     "build:app": "ng build app",
@@ -37,7 +40,7 @@
   },
   "homepage": "https://github.com/igloo15/basic-angular-library#readme",
   "readme": "ERROR: No README data found!",
-  "_id": "@igloo15/elasticsearch-document-editor@0.2.0-dev.1",
+  "_id": "@igloo15/elasticsearch-document-editor@0.2.0-dev.3",
   "dependencies": {
     "@angular/animations": "^9.1.2",
     "@angular/cdk": "^9.2.1",
@@ -74,7 +77,9 @@
     "codelyzer": "~5.2.2",
     "cpx": "^1.5.0",
     "cross-var": "^1.1.0",
+    "edit-json-file": "^1.4.0",
     "git-describe": "^4.0.4",
+    "glob": "^7.1.6",
     "ng-packagr": "^9.1.1",
     "read-pkg": "^5.2.0",
     "rimraf": "^3.0.2",
@@ -85,5 +90,5 @@
     "typescript": "~3.7.5",
     "write-pkg": "^4.0.0"
   },
-  "date": "Sun Mar 29 2020"
+  "date": "Sun Apr 19 2020"
 }

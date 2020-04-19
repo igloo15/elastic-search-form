@@ -10,4 +10,4 @@ import { ElasticConnectionService } from '../../services/elastic-connection.serv
         ElasticConnectionService
     ]
 })
-export class ElasticSearchServiceModule {}
+export class ElasticSearchDocumentModule {}

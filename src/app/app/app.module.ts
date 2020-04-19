@@ -11,11 +11,13 @@ import { FormlyMaterialModule } from '@ngx-formly/material';
 
 import { AppComponent } from './app.component';
 import { ElasticSearchServiceModule } from './modules/elasticsearch-module/public-api';
+import { ElasticSearchTableModule } from './modules/elasticsearch-table-module/public-api';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
+import { EsTableComponent } from './components/es-table/es-table.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent    
   ],
   imports: [
     BrowserModule,
@@ -28,6 +30,7 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
     FormlyModule.forRoot(),
     FormlyMaterialModule,
     ElasticSearchServiceModule,
+    ElasticSearchTableModule,
     NgxJsonViewerModule
   ],
   providers: [],

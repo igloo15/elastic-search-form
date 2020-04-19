@@ -1,5 +1,5 @@
 {
-  "name": "@igloo15/elasticsearch-document-editor",
+  "name": "@igloo15/elasticsearch-angular-service",
   "description": "ElasticSearch angular material document editor",
   "version": "0.2.0-dev.3",
   "repository": {
@@ -19,12 +19,9 @@
   "homepage": "https://github.com/igloo15/elastic-search-form#readme",
   "peerDependencies": {
     "@angular/common": "^9.1.2",
-    "@angular/core": "^9.1.2",
-    "@angular/material": "9.2.1",
-    "@ngx-formly/core": "5.5.15",
-    "@ngx-formly/material": "5.5.15"
+    "@angular/core": "^9.1.2"
   },
   "readme": "ERROR: No README data found!",
-  "_id": "@igloo15/elasticsearch-document-editor@0.2.0-dev.3",
+  "_id": "@igloo15/elasticsearch-document-editor@0.2.0-dev.1",
   "date": "Sun Apr 19 2020"
 }
