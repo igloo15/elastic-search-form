@@ -1,0 +1,21 @@
+{
+  "extends": "../../../../tsconfig.json",
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "outDir": "../../../../dist/app"
+  },
+  "include": [
+    "./**/*.ts",
+    "../../modules/**/*.ts"
+  ],
+  "exclude": [
+    "test.ts",
+    "**/*.spec.ts"
+  ],
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "enableIvy": false,
+    "enableResourceInlining": true
+  }
+}

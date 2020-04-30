@@ -1,0 +1,34 @@
+<div>
+    <mat-form-field *ngIf="config.showSearch">
+        <mat-label>Search</mat-label>
+        <input matInput (keyup)="searchTextUpdate.next($event)">
+    </mat-form-field>
+    <button mat-mini-fab color="primary" aria-label="Example icon button with a menu icon" (click)="refreshData()">
+        <mat-icon>refresh</mat-icon>
+    </button>
+    <ngx-datatable 
+        [rows]="rows" 
+        [columns]="columns" 
+        [columnMode]="ColumnMode.standard"
+        [reorderable]="true"
+        [loadingIndicator]="loading"
+        [headerHeight]="50"
+        [footerHeight]="50"
+        rowHeight="auto"
+        [count]="config.totalCount" 
+        [externalPaging]="true"
+        [externalSorting]="true"
+        [offset]="config.offset" 
+        [limit]="config.limit" 
+        [swapColumns]="true"
+        (page)="setPage($event)"
+        (sort)="onSort($event)"
+        class="material">
+    </ngx-datatable>
+
+    <ng-template #arrayTmpl let-row="row" let-value="value">
+        <mat-chip-list>
+            <mat-chip *ngFor="let item of value">{{item}}</mat-chip>
+        </mat-chip-list>
+    </ng-template>
+</div>

@@ -17,31 +17,14 @@
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "src/app/app/modules/elasticsearch-document-module/tsconfig.app.json",
-            "project": "src/app/app/modules/elasticsearch-document-module/ng-package.json"
-          },
-          "configurations": {
-            "production":{
-              
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "src/app/app/modules/elasticsearch-document-module/tsconfig.app.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": "src/app/modules/elasticsearch-document-module/tsconfig.lib.json",
+            "project": "src/app/modules/elasticsearch-document-module/ng-package.json"
           }
         }
       }
     },
     "service-lib": {
-      "root": "src/app/app/modules/elasticsearch-module",
-      "sourceRoot": "src/app/app/modules/elasticsearch-module",
+      "root": "src/app",
       "projectType": "library",
       "prefix": "lib",
       "schematics": {
@@ -53,31 +36,14 @@
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "src/app/app/modules/elasticsearch-module/tsconfig.app.json",
-            "project": "src/app/app/modules/elasticsearch-module/ng-package.json"
-          },
-          "configurations": {
-            "production":{
-              
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "src/app/app/modules/elasticsearch-module/tsconfig.app.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": "src/app/modules/elasticsearch-module/tsconfig.lib.json",
+            "project": "src/app/modules/elasticsearch-module/ng-package.json"
           }
         }
       }
     },
     "table-lib": {
       "root": "src/app/app/modules/elasticsearch-table-module",
-      "sourceRoot": "src/app/app/modules/elasticsearch-table-module",
       "projectType": "library",
       "prefix": "lib",
       "schematics": {
@@ -89,24 +55,8 @@
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "src/app/app/modules/elasticsearch-table-module/tsconfig.app.json",
-            "project": "src/app/app/modules/elasticsearch-table-module/ng-package.json"
-          },
-          "configurations": {
-            "production":{
-              
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "src/app/app/modules/elasticsearch-table-module/tsconfig.app.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": "src/app/modules/elasticsearch-table-module/tsconfig.lib.json",
+            "project": "src/app/modules/elasticsearch-table-module/ng-package.json"
           }
         }
       }
@@ -237,4 +187,5 @@
     }
   },
   "defaultProject": "app"
+  
 }

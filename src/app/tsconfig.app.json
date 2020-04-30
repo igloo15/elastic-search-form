@@ -5,6 +5,9 @@
     "resolveJsonModule": true,
     "outDir": "../../dist/app"
   },
+  "include": [
+    "./**/*.ts"
+  ],
   "exclude": [
     "test.ts",
     "**/*.spec.ts"
