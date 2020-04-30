@@ -4,8 +4,7 @@
   "newProjectRoot": "src",
   "projects": {
     "document-lib": {
-      "root": "src/app/app/modules/elasticsearch-document-module",
-      "sourceRoot": "src/app/app/modules/elasticsearch-document-module",
+      "root": "src/app/modules/elasticsearch-document-module",
       "projectType": "library",
       "prefix": "lib",
       "schematics": {
@@ -43,7 +42,7 @@
       }
     },
     "table-lib": {
-      "root": "src/app/app/modules/elasticsearch-table-module",
+      "root": "src/app/modules/elasticsearch-table-module",
       "projectType": "library",
       "prefix": "lib",
       "schematics": {
