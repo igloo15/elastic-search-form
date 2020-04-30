@@ -14,6 +14,9 @@ import { TableConfig, ColumnConfig } from '../../model/table-config';
 export class EsTableComponent implements OnInit {
 
   @ViewChild('arrayTmpl', { static: true }) arrayTmpl: TemplateRef<any>;
+  @ViewChild('objTmpl', { static: true }) objTmpl: TemplateRef<any>;
+  @ViewChild('expandTmpl', { static: true }) expandTmpl: TemplateRef<any>;
+  @ViewChild('esTable') table: any;
 
   @Input()
   public set limit(val: number) {
@@ -82,6 +85,7 @@ export class EsTableComponent implements OnInit {
   }
 
   updateConfigFunction() {
+    this._config.expandColumn.cellTemplate = this.expandTmpl;
     this._config.toggleIdColumn = () => {
       this._config.startWithIdColumn = this.toggleColumn('_id');
     }
@@ -92,7 +96,16 @@ export class EsTableComponent implements OnInit {
 
   updateMappings() {
     if(this._config.startWithIdColumn) {
-      this._config.columns['_id'] = {prop:'_id', name: 'Id', hide: false, type:'basic', addKeyword:false, sortable:false};
+      this._config.columns = {
+        ...{_id:this._config.idColumn },
+        ...this._config.columns
+      }
+    }
+    if (this._config.startWithExpandColumn) {
+      this._config.columns = {
+        ...{_expandColumn: this._config.expandColumn},
+        ...this._config.columns
+      }
     }
     Object.keys(this._mappings.properties).forEach(key => {
       const item = this._mappings.properties[key];
@@ -124,6 +137,9 @@ export class EsTableComponent implements OnInit {
         case 'array':
           newColumn.cellTemplate = this.arrayTmpl;
           break;
+        case 'object':
+          newColumn.cellTemplate = this.objTmpl;
+          break;
       }
       this._config.columns[key] = newColumn;
     });
@@ -147,7 +163,7 @@ export class EsTableComponent implements OnInit {
     const configColumns = Object.keys(this._config.columns);
     configColumns.forEach(key => {
       const column = this._config.columns[key];
-      if(!column.hide && column.type !== 'object') {
+      if(!column.hide) {
         newColumns.push(column);
       }
     });
@@ -201,6 +217,10 @@ export class EsTableComponent implements OnInit {
     this._config.columns[col].hide = !this._config.columns[col].hide;
     this.refreshColumns();
     return this._config.columns[col].hide;
+  }
+
+  toggleExpandRow(row) {
+    this.table.rowDetail.toggleExpandRow(row);
   }
 
   isColumnShown(col: string) {

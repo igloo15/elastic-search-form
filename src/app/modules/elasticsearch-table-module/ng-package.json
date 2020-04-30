@@ -4,7 +4,8 @@
   "whitelistedNonPeerDependencies": [
     "tslib",
     "@swimlane/ngx-datatable",
-    "@igloo15/elasticsearch-angular-service"
+    "@igloo15/elasticsearch-angular-service",
+    "ngx-json-viewer"
   ],
   "lib": {
     "entryFile": "public-api.ts"

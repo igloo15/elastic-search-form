@@ -19,7 +19,8 @@
   "homepage": "https://github.com/igloo15/elastic-search-form#readme",
   "dependencies": {
     "@swimlane/ngx-datatable": "^17.0.0",
-    "@igloo15/elasticsearch-angular-service":"^0.2.0-dev.8"    
+    "@igloo15/elasticsearch-angular-service":"^0.2.0-dev.8",
+    "ngx-json-viewer": "^2.4.0"
   },
   "peerDependencies": {
     "@angular/common": "^9.1.4",

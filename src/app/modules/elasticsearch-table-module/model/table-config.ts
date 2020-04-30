@@ -6,6 +6,10 @@ export interface ColumnConfig
     prop: string;
     name?: string;
     type?: 'basic'|'array'|'object';
+    width?: number;
+    resizable?: boolean;
+    draggable?: boolean;
+    canAutoResize?: boolean;
     hide?: boolean;
     cellTemplate?: TemplateRef<any>;
     sortable?: boolean;
@@ -25,8 +29,26 @@ export class TableConfig {
     public totalCount = 0;
     public showSearch = true;
     public startWithIdColumn = true;
+    public startWithExpandColumn = true;
     public sortItem?: SortItem;
     public columns: ColumnCollection = {};
+    public expandColumn: ColumnConfig = {
+        prop: '',
+        name: '',
+        width: 50,
+        resizable: false,
+        sortable: false,
+        draggable: false,
+        canAutoResize: false
+    }
+
+    public idColumn: ColumnConfig = {
+        prop: '_id',
+        name: 'Id',
+        hide: false,
+        type: 'basic',
+        sortable: false
+    }
 
     constructor(myIndex: string, columns?: ColumnCollection) {
         this.index = myIndex;

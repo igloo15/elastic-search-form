@@ -7,6 +7,7 @@
         <mat-icon>refresh</mat-icon>
     </button>
     <ngx-datatable 
+        #esTable
         [rows]="rows" 
         [columns]="columns" 
         [columnMode]="ColumnMode.standard"
@@ -24,11 +25,32 @@
         (page)="setPage($event)"
         (sort)="onSort($event)"
         class="material">
+        <!-- Row Detail Template -->
+        <ngx-datatable-row-detail [rowHeight]="100" #myDetailRow>
+            <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+                <ngx-json-viewer [json]="row" [expanded]="false"></ngx-json-viewer>
+            </ng-template>
+        </ngx-datatable-row-detail>
     </ngx-datatable>
+
+    <ng-template #expandTmpl let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+        <span
+            href="javascript:void(0)"
+            [class.datatable-icon-right]="!expanded"
+            [class.datatable-icon-down]="expanded"
+            title="Expand/Collapse Row"
+            (click)="toggleExpandRow(row)"
+        >
+        </span>
+    </ng-template>
 
     <ng-template #arrayTmpl let-row="row" let-value="value">
         <mat-chip-list>
             <mat-chip *ngFor="let item of value">{{item}}</mat-chip>
         </mat-chip-list>
+    </ng-template>
+
+    <ng-template #objTmpl let-row="row" let-value="value">
+        <ngx-json-viewer [json]="value" [expanded]="false"></ngx-json-viewer>
     </ng-template>
 </div>

@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { MatButtonModule } from '@angular/material/button';
         MatIconModule,
         MatButtonModule,
         NgxDatatableModule,
-        ElasticSearchServiceModule
+        ElasticSearchServiceModule,
+        NgxJsonViewerModule
     ],
     exports: [
         EsTableComponent
