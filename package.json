@@ -1,6 +1,6 @@
 {
   "name": "@igloo15/elasticsearch-document-editor",
-  "version": "0.2.0-dev.8",
+  "version": "0.3.0-dev.2",
   "description": "A game of taking turns",
   "main": "index.js",
   "scripts": {
@@ -94,5 +94,5 @@
     "typedoc": "^0.17.6",
     "typescript": "~3.7.5"
   },
-  "date": "Wed Apr 29 2020"
+  "date": "Thu Apr 30 2020"
 }

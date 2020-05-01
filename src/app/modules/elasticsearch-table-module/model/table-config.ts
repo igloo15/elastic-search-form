@@ -6,6 +6,7 @@ export interface ColumnConfig
     prop: string;
     name?: string;
     type?: 'basic'|'array'|'object';
+    minWidth?: number;
     width?: number;
     resizable?: boolean;
     draggable?: boolean;
@@ -23,13 +24,41 @@ export interface ColumnCollection {
 
 export class TableConfig {
 
+    private _limit = 10;
+
     public index: string;
-    public limit = 10;
+
+    public get limit() {
+        return this._limit;
+    }
+    public set limit(val: number) {
+        this._limit = val;
+        this.refreshData();
+    }
+
+    private _showIdColumn = true;
+    public get showIdColumn() {
+        return this._showIdColumn;
+    }
+    public set showIdColumn(val: boolean) {
+        this._showIdColumn = val;
+        this.idColumn.hide = !val;
+        this.refreshColumns();
+    }
+
+    private _showExpandColumn = true;
+    public get showExpandColumn() {
+        return this._showExpandColumn;
+    }
+    public set showExpandColumn(val: boolean) {
+        this._showExpandColumn = val;
+        this.expandColumn.hide = !val;
+        this.refreshColumns();
+    }
+
     public offset = 0;
     public totalCount = 0;
     public showSearch = true;
-    public startWithIdColumn = true;
-    public startWithExpandColumn = true;
     public sortItem?: SortItem;
     public columns: ColumnCollection = {};
     public expandColumn: ColumnConfig = {
@@ -57,4 +86,13 @@ export class TableConfig {
 
     toggleIdColumn: () => void
     toggleColumn: (id: string) => void
+
+    refreshColumns: () => void = () => {};
+    refreshData: (resetOffset?: boolean) => void = (resetOffset?: boolean) => {};
+
+    public addColumn(column: ColumnConfig): TableConfig {
+        this.columns[column.prop] = column;
+        this.refreshColumns();
+        return this;
+    }
 }

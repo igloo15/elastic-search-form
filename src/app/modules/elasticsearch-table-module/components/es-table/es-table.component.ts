@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, TemplateRef, ViewChild } from '@angular/core';
-import { ColumnMode } from '@swimlane/ngx-datatable';
+import { ColumnMode, DatatableComponent } from '@swimlane/ngx-datatable';
 import { ElasticConnectionService, ESMapping, SortItem } from '@igloo15/elasticsearch-angular-service';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -16,18 +16,15 @@ export class EsTableComponent implements OnInit {
   @ViewChild('arrayTmpl', { static: true }) arrayTmpl: TemplateRef<any>;
   @ViewChild('objTmpl', { static: true }) objTmpl: TemplateRef<any>;
   @ViewChild('expandTmpl', { static: true }) expandTmpl: TemplateRef<any>;
-  @ViewChild('esTable') table: any;
-
-  @Input()
-  public set limit(val: number) {
-    this.config.limit = val;
-    this.refreshData();
+  private _dataTable: DatatableComponent;
+  @ViewChild('esTable') set table(dataTable: DatatableComponent) {
+    this._dataTable = dataTable;
+    dataTable.columnMode = ColumnMode.force;
   }
 
-  public get limit(): number {
-    return this.config.limit;
+  get table() {
+    return this._dataTable;
   }
-
 
   @Input()
   public set config(val: TableConfig) {
@@ -86,8 +83,10 @@ export class EsTableComponent implements OnInit {
 
   updateConfigFunction() {
     this._config.expandColumn.cellTemplate = this.expandTmpl;
+    this._config.refreshColumns = () => { this.refreshColumns(); };
+    this._config.refreshData = (resetOffset?:boolean) => { this.refreshData(resetOffset); };
     this._config.toggleIdColumn = () => {
-      this._config.startWithIdColumn = this.toggleColumn('_id');
+      this._config.showIdColumn = this.toggleColumn(this._config.idColumn.prop);
     }
     this._config.toggleColumn = (id: string) => {
       this.toggleColumn(id);
@@ -95,13 +94,13 @@ export class EsTableComponent implements OnInit {
   }
 
   updateMappings() {
-    if(this._config.startWithIdColumn) {
+    if(this._config.showIdColumn) {
       this._config.columns = {
         ...{_id:this._config.idColumn },
         ...this._config.columns
       }
     }
-    if (this._config.startWithExpandColumn) {
+    if (this._config.showExpandColumn) {
       this._config.columns = {
         ...{_expandColumn: this._config.expandColumn},
         ...this._config.columns

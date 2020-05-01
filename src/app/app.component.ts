@@ -11,11 +11,9 @@ import { TableConfig } from './modules/elasticsearch-table-module/model/table-co
 export class AppComponent {
   title = 'baseturn-game';
   answer = '';
-  tableConfig = new TableConfig('test', {
-    friends: {
-      prop: 'friends',
-      type: 'array'
-    }
+  tableConfig = new TableConfig('test').addColumn({
+    prop: 'friends',
+    type: 'array'
   });
 
   constructor(private elasticService: ElasticConnectionService) {
@@ -49,6 +47,8 @@ export class AppComponent {
         });
         setTimeout(() => {
           this.tableConfig.toggleColumn('age');
+          this.tableConfig.showExpandColumn = false;
+          this.tableConfig.showIdColumn = false;
         }, 10000);
 
     });
