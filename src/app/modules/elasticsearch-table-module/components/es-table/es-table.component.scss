@@ -1,17 +1,42 @@
 .mat-icon-button {
-    line-height: unset;
- }
+  line-height: unset;
+}
 
- .mat-chip-list {
-     width: 100%;
- }
+.mat-chip-list {
+  width: 100%;
+}
 
- .datatable-header-cell-label {
-    -webkit-touch-callout: none; /* iOS Safari */
-      -webkit-user-select: none; /* Safari */
-       -khtml-user-select: none; /* Konqueror HTML */
-         -moz-user-select: none; /* Old versions of Firefox */
-          -ms-user-select: none; /* Internet Explorer/Edge */
-              user-select: none; /* Non-prefixed version, currently
+.datatable-header-cell-label {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
                                     supported by Chrome, Opera and Firefox */
-  }
+}
+
+.top-container {
+  display:flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.button-margins {
+  margin-right: 8px;
+}
+
+.spacer {
+  flex-grow: 1;
+}
+
+.search-width {
+  min-width: 30vw;
+}
+
+.table-outline {
+  padding: 5px;
+  border: solid 1px lightblue;
+  border-radius: 20px;
+  background-color: lightblue;
+}

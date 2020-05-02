@@ -1,11 +1,19 @@
-<div>
-    <mat-form-field *ngIf="config.showSearch">
-        <mat-label>Search</mat-label>
-        <input matInput (keyup)="searchTextUpdate.next($event)">
-    </mat-form-field>
-    <button mat-mini-fab color="primary" aria-label="Example icon button with a menu icon" (click)="refreshData()">
-        <mat-icon>refresh</mat-icon>
-    </button>
+<div class="table-outline">
+    <div class="top-container">
+        <mat-form-field *ngIf="config.showSearch" class="search-width">
+            <mat-label>Search</mat-label>
+            <input matInput (keyup)="searchTextUpdate.next($event)" >
+        </mat-form-field>
+        <div class="spacer"></div>
+        
+        <button mat-mini-fab color="primary" (click)="refreshData()" class="button-margins">
+            <mat-icon>refresh</mat-icon>
+        </button>
+        <button mat-mini-fab color="primary" (click)="openConfig()" class="button-margins">
+            <mat-icon>settings</mat-icon>
+        </button>
+        
+    </div>
     <ngx-datatable 
         #esTable
         [rows]="rows" 
