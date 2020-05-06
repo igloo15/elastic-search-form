@@ -1,10 +1,13 @@
 import { Component, OnInit, Input, TemplateRef, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ColumnMode, DatatableComponent } from '@swimlane/ngx-datatable';
 import { ElasticConnectionService, ESMapping, SortItem } from '@igloo15/elasticsearch-angular-service';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { IColumn } from '../../model/table-types';
 import { TableConfig, ColumnConfig } from '../../model/table-config';
+import { MatDialog } from '@angular/material/dialog';
+import { TableConfigDialogComponent } from '../table-config-dialog/table-config-dialog.component';
 
 @Component({
   selector: 'es-table',
@@ -49,7 +52,7 @@ export class EsTableComponent implements OnInit {
   private _mappings: ESMapping;
   private _config: TableConfig;
 
-  constructor(service: ElasticConnectionService) {
+  constructor(service: ElasticConnectionService, public dialog: MatDialog, private route: ActivatedRoute) {
     this._service = service;
     this.items = [];
     this.searchTextUpdate.pipe(
@@ -63,6 +66,14 @@ export class EsTableComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    this.route.paramMap.subscribe(params => {
+      if(params.get('index')) {
+        this._config.index = params.get('index');
+      }
+      if (params.get('offset')) {
+        this._config.offset = +params.get('offset');
+      }
+    });
     if(this._config.index) {
       this._service.isStarted.subscribe(async (result) => {
         if(result) {
@@ -164,6 +175,8 @@ export class EsTableComponent implements OnInit {
       const column = this._config.columns[key];
       if(!column.hide) {
         newColumns.push(column);
+      } else {
+        //column.width = null;
       }
     });
     this.columns = [...newColumns];
@@ -201,19 +214,8 @@ export class EsTableComponent implements OnInit {
   }
 
   toggleColumn(col: string): boolean {
-    // const isChecked = this.isColumnShown(col.name);
-
-    // if (isChecked) {
-    //   this.columns = this.columns.filter(c => {
-    //     return c.name !== col.name;
-    //   });
-    //   return false;
-    // } else {
-    //   this.columns = [...this.columns, col];
-    //   return true;
-    // }
-
     this._config.columns[col].hide = !this._config.columns[col].hide;
+    
     this.refreshColumns();
     return this._config.columns[col].hide;
   }
@@ -222,14 +224,12 @@ export class EsTableComponent implements OnInit {
     this.table.rowDetail.toggleExpandRow(row);
   }
 
-  isColumnShown(col: string) {
-    for(const item of this.columns) {
-      if(item.name === col) {
-        return true;
-      }
-    }
+  openConfig() {
+    const dialogRef = this.dialog.open(TableConfigDialogComponent, {
+      hasBackdrop: true,
+      data: this._config
+    });
 
-    return false;
   }
 
 }

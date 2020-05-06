@@ -1,6 +1,8 @@
 <!--The content below is only a placeholder and can be replaced.-->
 
 <div fxFlexFill fxLayout="column" fxLayoutGap="2vh" id="main-content" style="background-color: white;">
+  <router-outlet></router-outlet>
   <ngx-json-viewer [json]="answer" [expanded]="false"></ngx-json-viewer>
+  <es-table-view></es-table-view>
   <es-table [showIdField]="true" [config]="tableConfig"></es-table>
 </div>

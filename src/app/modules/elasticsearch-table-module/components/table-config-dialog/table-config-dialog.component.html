@@ -1,0 +1,10 @@
+<h1 mat-dialog-title>Table Configuration</h1>
+<div mat-dialog-content class="config-table">
+    <mat-slide-toggle [checked]="data.showSearch" (change)="onSearchChange($event)">Show Search Box</mat-slide-toggle>
+    <mat-slide-toggle [checked]="data.showRefresh" (change)="onRefreshChange($event)">Show Refresh Button</mat-slide-toggle>
+    <mat-slide-toggle [checked]="data.showLimitDropDown" (change)="onDropDownChange($event)">Show Limit Drop Down</mat-slide-toggle>
+    <hr>
+    <div *ngFor="let column of data.columns | keyvalue">
+        <mat-slide-toggle [checked]="!column.value.hide" (change)="onColumnHideChange(column.key)">Show {{column.value.name}} Column</mat-slide-toggle>
+    </div>
+</div>
