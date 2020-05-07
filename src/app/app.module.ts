@@ -12,7 +12,7 @@ import { FormlyMaterialModule } from '@ngx-formly/material';
 
 import { AppComponent } from './app.component';
 import { ElasticSearchServiceModule } from '@igloo15/elasticsearch-angular-service';
-import { ElasticSearchTableModule } from './modules/elasticsearch-table-module/public-api';
+import { ElasticSearchTableModule, tableRoutes, TableConfig } from './modules/elasticsearch-table-module/public-api';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
 @NgModule({
@@ -22,7 +22,7 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    RouterModule.forRoot([]),
+    RouterModule.forRoot([...tableRoutes], { useHash: true }),
     MaterialModule,
     FlexLayoutModule,
     FormsModule,
@@ -31,7 +31,7 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
     FormlyModule.forRoot(),
     FormlyMaterialModule,
     ElasticSearchServiceModule,
-    ElasticSearchTableModule,
+    ElasticSearchTableModule.forRoot(new TableConfig('test')),
     NgxJsonViewerModule
   ],
   providers: [],

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, InjectionToken, ModuleWithProviders } from '@angular/core';
 import { RouterModule , Routes } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
@@ -14,22 +14,21 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { TableConfigDialogComponent } from './components/table-config-dialog/table-config-dialog.component';
-import { EsTableViewComponent } from './components/es-table-view/es-table-view.component';
+import { TableConfig } from './model/table-config';
+import { EsTableConfigService } from './elasticsearch-table.config';
 
-const childRoutes: Routes = [
-    { path: 'table/:index/:offset', component: EsTableComponent }
+export const tableRoutes: Routes = [
+    { path: 'table/:index/:offset', component: EsTableComponent },
+    { path: 'table/:index', component: EsTableComponent }
 ];
-
 
 @NgModule({
     declarations: [
         EsTableComponent,
-        TableConfigDialogComponent,
-        EsTableViewComponent
+        TableConfigDialogComponent
     ],
     imports: [
         BrowserModule,
-        RouterModule.forChild(childRoutes),
         HttpClientModule,
         MatInputModule,
         MatChipsModule,
@@ -44,7 +43,19 @@ const childRoutes: Routes = [
     ],
     exports: [
         EsTableComponent,
-        RouterModule
+        TableConfigDialogComponent
     ]
 })
-export class ElasticSearchTableModule {}
+export class ElasticSearchTableModule {
+    static forRoot(config: TableConfig): ModuleWithProviders {
+        return {
+            ngModule: ElasticSearchTableModule,
+            providers: [
+                {
+                    provide: EsTableConfigService,
+                    useValue: config
+                }
+            ]
+        };
+    }
+}

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, TemplateRef, ViewChild, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ColumnMode, DatatableComponent } from '@swimlane/ngx-datatable';
 import { ElasticConnectionService, ESMapping, SortItem } from '@igloo15/elasticsearch-angular-service';
@@ -8,6 +8,7 @@ import { IColumn } from '../../model/table-types';
 import { TableConfig, ColumnConfig } from '../../model/table-config';
 import { MatDialog } from '@angular/material/dialog';
 import { TableConfigDialogComponent } from '../table-config-dialog/table-config-dialog.component';
+import { EsTableConfigService } from '../../elasticsearch-table.config';
 
 @Component({
   selector: 'es-table',
@@ -19,6 +20,7 @@ export class EsTableComponent implements OnInit {
   @ViewChild('arrayTmpl', { static: true }) arrayTmpl: TemplateRef<any>;
   @ViewChild('objTmpl', { static: true }) objTmpl: TemplateRef<any>;
   @ViewChild('expandTmpl', { static: true }) expandTmpl: TemplateRef<any>;
+
   private _dataTable: DatatableComponent;
   @ViewChild('esTable') set table(dataTable: DatatableComponent) {
     this._dataTable = dataTable;
@@ -47,12 +49,15 @@ export class EsTableComponent implements OnInit {
   public searchTextUpdate = new Subject<any>();
   public searchScore: number;
   public loading = true;
+  public limits = [1, 5, 10, 25, 50];
 
   private _service: ElasticConnectionService;
   private _mappings: ESMapping;
   private _config: TableConfig;
 
-  constructor(service: ElasticConnectionService, public dialog: MatDialog, private route: ActivatedRoute) {
+  constructor(service: ElasticConnectionService, public dialog: MatDialog,
+    private route: ActivatedRoute, @Inject(EsTableConfigService) private configService) {
+
     this._service = service;
     this.items = [];
     this.searchTextUpdate.pipe(
@@ -66,14 +71,9 @@ export class EsTableComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.route.paramMap.subscribe(params => {
-      if(params.get('index')) {
-        this._config.index = params.get('index');
-      }
-      if (params.get('offset')) {
-        this._config.offset = +params.get('offset');
-      }
-    });
+    if (!this._config) {
+      this.config = this.configService;
+    }
     if(this._config.index) {
       this._service.isStarted.subscribe(async (result) => {
         if(result) {
@@ -81,6 +81,15 @@ export class EsTableComponent implements OnInit {
         }
       });
     }
+    this.route.paramMap.subscribe(params => {
+      if(params.get('index') && this._config) {
+        this.configService.index = params.get('index');
+      }
+      if (params.get('offset') && this._config) {
+        this.configService.offset = +params.get('offset');
+      }
+    });
+
   }
 
   async startUp() {
@@ -215,7 +224,7 @@ export class EsTableComponent implements OnInit {
 
   toggleColumn(col: string): boolean {
     this._config.columns[col].hide = !this._config.columns[col].hide;
-    
+
     this.refreshColumns();
     return this._config.columns[col].hide;
   }

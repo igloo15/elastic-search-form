@@ -4,12 +4,19 @@
             <mat-label>Search</mat-label>
             <input matInput (keyup)="searchTextUpdate.next($event)" >
         </mat-form-field>
+        <mat-form-field *ngIf="config.showLimitDropDown">
+            <mat-label>Item Limit</mat-label>
+            <mat-select [(value)]="config.limit">
+                <mat-option *ngFor="let item of limits" [value]="item">{{item}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        
         <div class="spacer"></div>
         
-        <button mat-mini-fab color="primary" (click)="refreshData()" class="button-margins">
+        <button mat-mini-fab color="primary" (click)="refreshData()" class="button-margins" *ngIf="config.showRefresh">
             <mat-icon>refresh</mat-icon>
         </button>
-        <button mat-mini-fab color="primary" (click)="openConfig()" class="button-margins">
+        <button mat-mini-fab color="primary" (click)="openConfig()" class="button-margins" *ngIf="config.showConfigButton">
             <mat-icon>settings</mat-icon>
         </button>
         

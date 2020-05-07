@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "clean": "rimraf dist",
-    "serve": "npm run build:service:lib && ng serve",
+    "serve": "npm run build:service:lib && npm run build:table:lib && ng serve",
     "update:version": "node ./configs/update-version.js",
     "docs": "typedoc --theme markdown --readme docs/README.md --out docs/api src",
     "copy:readme": "cpx ./README.md ./dist/service-lib && cpx ./README.md ./dist/table-lib && cpx ./README.md ./dist/document-lib",
@@ -59,6 +59,7 @@
     "@angular/router": "~9.1.4",
     "@elastic/elasticsearch": "^7.6.1",
     "@igloo15/elasticsearch-angular-service": "file:./dist/service-lib",
+    "@igloo15/elasticsearch-angular-table": "file:./dist/table-lib",
     "@ngx-formly/core": "^5.6.0",
     "@ngx-formly/material": "^5.6.0",
     "@ngx-formly/schematics": "^5.6.0",

@@ -58,9 +58,12 @@ export class TableConfig {
 
     public offset = 0;
     public totalCount = 0;
+
     public showSearch = true;
     public showLimitDropDown = true;
     public showRefresh = true;
+    public showConfigButton = true;
+
     public sortItem?: SortItem;
     public columns: ColumnCollection = {};
     public expandColumn: ColumnConfig = {
