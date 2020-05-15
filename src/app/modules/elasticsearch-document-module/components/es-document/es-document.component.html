@@ -1,4 +1,9 @@
 <div class="form-container">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>{{title}}</mat-card-title>
+        </mat-card-header>
+    </mat-card>
     <ng-container *ngFor="let item of fields">
         <es-field-wrapper [config]="item"></es-field-wrapper>
     </ng-container>

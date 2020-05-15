@@ -1,36 +1,56 @@
 import { TemplateRef, Type } from '@angular/core';
+import { ESFieldData } from './field-data';
 
-export interface ESField {
-    data: ESFieldData;
-}
 
-export interface ESFieldData {
-    type: string;
-    disabled: boolean;
-    customConfig?: ESCustomFieldConfig;
-    model: any;
+export interface ESFieldItemConfig {
     label: string;
-    key: string[];
-}
-
-
-export interface ESFieldDefinition {
     type: string;
-    template: Type<any>;
 }
 
-export interface ESCustomFieldConfig {
-    [key: string]: any;
+export interface ESDocumentRowConfig {
+    title: string;
+    columns: ESFieldItemConfig[];
+    addItem: (item: ESFieldItemConfig) => ESDocumentRowConfig;
 }
 
-export interface ESFieldConfig {
-    data: ESFieldData;
-    template: Type<any>;
+class ConcreteRowConfig implements ESDocumentRowConfig {
+    title = '';
+    columns: ESFieldItemConfig[] = [];
+
+    addItem(item: ESFieldItemConfig) {
+        this.columns.push(item);
+        return this;
+    }
 }
+
+type TitleType = string | ((model: any) => string);
 
 export class ESDocumentConfig {
     index: string;
     id: string;
+    title: (model: any) => string;
+    fields: ESDocumentRowConfig[] = [];
 
-    fields: ESFieldConfig[] = [];
+    constructor(title: TitleType) {
+        if (typeof title === 'string') {
+            this.title = (model: any) => title;
+        } else {
+            this.title = title;
+        }
+    }
+
+    getTitle(model: any) {
+        return this.title(model);
+    }
+
+    addRow(): ESDocumentRowConfig {
+        const row = this.createRow();
+        this.fields.push(row);
+        return row;
+    }
+
+    private createRow() {
+        return new ConcreteRowConfig();
+    }
 }
+

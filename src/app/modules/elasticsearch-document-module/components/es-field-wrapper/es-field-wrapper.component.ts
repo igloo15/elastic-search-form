@@ -1,5 +1,5 @@
 import { Component, OnInit, ComponentFactory, ComponentFactoryResolver, Input, ViewChild } from '@angular/core';
-import { ESFieldConfig, ESField } from '../../models/document-config';
+import { ESFieldConfig, ESField } from '../../models/field-data';
 import { EsFieldHostDirective } from '../es-field-host.directive';
 
 @Component({

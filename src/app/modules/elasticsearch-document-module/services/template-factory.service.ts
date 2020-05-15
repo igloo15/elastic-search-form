@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ESFieldDefinition } from '../models/document-config';
+import { ESFieldDefinition } from '../models/field-data';
 import { EsFieldInputComponent } from '../components/es-field-input/es-field-input.component';
 import { EsFieldToggleComponent } from '../components/es-field-toggle/es-field-toggle.component';
 import { EsFieldChipsComponent } from '../components/es-field-chips/es-field-chips.component';

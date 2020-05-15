@@ -2,9 +2,12 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ElasticConnectionService, ESMapping, ESSubProperty } from '@igloo15/elasticsearch-angular-service';
 import { ActivatedRoute } from '@angular/router';
-import { ESDocumentConfig, ESFieldConfig, ESCustomFieldConfig } from '../../models/document-config';
+import { ESDocumentConfig } from '../../models/document-config';
+import { ESCustomFieldConfig, ESFieldConfig } from '../../models/field-data';
 import { TemplateFactoryService } from '../../services/template-factory.service';
 import { DocumentUtility } from '../../document-utility';
+import { EsDocumentService } from '../../services/es-document.service';
+import { ModelRoot, ModelProp } from '../../models/model-data';
 
 @Component({
   selector: 'es-document',
@@ -14,7 +17,7 @@ import { DocumentUtility } from '../../document-utility';
 export class EsDocumentComponent implements OnInit {
 
   private editFields = false;
-  public model: any;
+  public model: ModelRoot;
 
   @Input()
   public set index(val: string) {
@@ -47,8 +50,8 @@ export class EsDocumentComponent implements OnInit {
   public form = new FormGroup({});
   public fields: ESFieldConfig[] = [];
 
-  constructor(public esService: ElasticConnectionService, private route: ActivatedRoute, private templateFactory: TemplateFactoryService) {
-    this.config = new ESDocumentConfig();
+  constructor(public esService: ElasticConnectionService, private route: ActivatedRoute, private documentService: EsDocumentService) {
+    this.config = new ESDocumentConfig('My Form');
   }
 
   ngOnInit(): void {
@@ -78,83 +81,22 @@ export class EsDocumentComponent implements OnInit {
     const mapping = await this.esService.getMapping(this.index);
     const result = await this.esService.getById<any>(this.index, this.id);
     if (result && mapping) {
-      this.model = result;
+      this.model = this.documentService.parseModel(result, mapping);
+      console.log(this.documentService.parseModel(result, mapping));
       this.updateFormConfig(mapping);
     }
   }
 
   updateFormConfig(mapping: ESMapping) {
     const newFields: ESFieldConfig[] = [];
-    Object.keys(mapping.properties).forEach(key => {
-      const item = mapping.properties[key];
-      if (item.type) {
-        const formConfig = this.getConfig(key, item);
-        newFields.push(formConfig);
-      }
-    });
+    for(const prop of this.model.properties) {
+      const formConfig = this.documentService.getConfig(prop, this.editFields);
+      newFields.push(formConfig);
+    }
     this.fields = [...newFields];
   }
 
   onSubmit() {
     console.log('saving');
   }
-
-  getConfig(key: string, item: ESSubProperty): ESFieldConfig {
-    const customConfig: ESCustomFieldConfig = {};
-    const keys = key.split('.');
-    const value = DocumentUtility.getValue(keys, this.model);
-    const label = DocumentUtility.capitalize(key);
-    let type = '';
-    if (Array.isArray(value)) {
-      type = 'array';
-    } else {
-      switch(item.type) {
-        case 'text':
-        case 'keyword':
-          type = 'input';
-          break;
-        case 'long':
-        case 'integer':
-        case 'short':
-        case 'byte':
-          type = 'number';
-          break;
-        case 'double':
-        case 'float':
-        case 'half_float':
-        case 'scaled_float':
-          type = 'number';
-          break;
-        case 'date':
-          type = 'datepicker';
-          break;
-        case 'date_nanos':
-          break;
-        case 'boolean':
-          type = 'toggle';
-          break;
-        default:
-          break;
-      }
-    }
-
-    if (type) {
-      const template = this.templateFactory.getTemplate(type).template;
-      const configItem: ESFieldConfig = {
-        data: {
-          key: keys,
-          disabled: !this.editFields,
-          customConfig,
-          label,
-          type,
-          model: this.model
-        },
-        template
-      };
-
-      return configItem;
-    }
-    return null;
-  }
-
 }

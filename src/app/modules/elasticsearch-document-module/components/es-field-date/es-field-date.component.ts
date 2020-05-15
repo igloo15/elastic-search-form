@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DocumentUtility } from '../../document-utility';
-import { ESField, ESFieldData } from '../../models/document-config';
+import { ESField, ESFieldData } from '../../models/field-data';
 
 @Component({
   selector: 'es-field-date',

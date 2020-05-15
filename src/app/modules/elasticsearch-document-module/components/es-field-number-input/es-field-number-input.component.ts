@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ESFieldData, ESField } from '../../models/document-config';
+import { ESFieldData, ESField } from '../../models/field-data';
 import { DocumentUtility } from '../../document-utility';
 
 @Component({

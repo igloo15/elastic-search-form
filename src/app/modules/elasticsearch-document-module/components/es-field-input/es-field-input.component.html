@@ -1,4 +1,4 @@
 <mat-form-field>
     <mat-label>{{data.label}}</mat-label>
-    <input matInput [value]="getValue()" [disabled]="data.disabled">
+    <input matInput [value]="data.model.value" [disabled]="data.disabled">
 </mat-form-field>
