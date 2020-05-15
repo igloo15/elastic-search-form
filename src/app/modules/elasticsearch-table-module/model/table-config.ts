@@ -1,20 +1,26 @@
 import { SortItem } from '@igloo15/elasticsearch-angular-service';
 import { TemplateRef } from '@angular/core';
 
-export interface ColumnConfig
-{
+export interface ColumnConfig {
     prop: string;
     name?: string;
+    displayName?: string;
     type?: 'basic'|'array'|'object';
     minWidth?: number;
     width?: number;
-    resizable?: boolean;
+    $$oldWidth?: number;
+    resizeable?: boolean;
     draggable?: boolean;
     canAutoResize?: boolean;
     hide?: boolean;
     cellTemplate?: TemplateRef<any>;
     sortable?: boolean;
     addKeyword?: boolean;
+}
+
+export interface ESDataTypeConverter {
+    dataType: string;
+    template: TemplateRef<any>;
 }
 
 export interface ColumnCollection {
@@ -65,12 +71,14 @@ export class TableConfig {
     public showConfigButton = true;
 
     public sortItem?: SortItem;
+    public dataConverters: {[key:string]: ESDataTypeConverter} = {};
     public columns: ColumnCollection = {};
     public expandColumn: ColumnConfig = {
         prop: '',
         name: '',
+        displayName: 'Expand Column',
         width: 50,
-        resizable: false,
+        resizeable: false,
         sortable: false,
         draggable: false,
         canAutoResize: false
@@ -95,9 +103,16 @@ export class TableConfig {
     refreshColumns: () => void = () => {};
     refreshData: (resetOffset?: boolean) => void = (resetOffset?: boolean) => {};
 
+    updateMappings: () => void = () => {};
+
     public addColumn(column: ColumnConfig): TableConfig {
         this.columns[column.prop] = column;
         this.refreshColumns();
+        return this;
+    }
+
+    public addDataTypeConverter(dataConverter: ESDataTypeConverter): TableConfig {
+        this.dataConverters[dataConverter.dataType] = dataConverter;
         return this;
     }
 }

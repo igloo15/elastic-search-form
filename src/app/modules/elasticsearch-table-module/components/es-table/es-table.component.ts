@@ -71,10 +71,10 @@ export class EsTableComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    if (!this._config) {
+    if (!this.config) {
       this.config = this.configService;
     }
-    if(this._config.index) {
+    if(this.config.index) {
       this._service.isStarted.subscribe(async (result) => {
         if(result) {
           await this.startUp();
@@ -82,10 +82,10 @@ export class EsTableComponent implements OnInit {
       });
     }
     this.route.paramMap.subscribe(params => {
-      if(params.get('index') && this._config) {
+      if(params.get('index') && this.config) {
         this.configService.index = params.get('index');
       }
-      if (params.get('offset') && this._config) {
+      if (params.get('offset') && this.config) {
         this.configService.offset = +params.get('offset');
       }
     });
@@ -93,8 +93,8 @@ export class EsTableComponent implements OnInit {
   }
 
   async startUp() {
-    this._mappings = await this._service.getMapping(this._config.index);
-    this._config.totalCount = await this._service.getCount(this._config.index);
+    this._mappings = await this._service.getMapping(this.config.index);
+    this.config.totalCount = await this._service.getCount(this.config.index);
     this.updateMappings();
     this.refreshColumns();
     this.refreshData();
@@ -102,26 +102,27 @@ export class EsTableComponent implements OnInit {
   }
 
   updateConfigFunction() {
-    this._config.expandColumn.cellTemplate = this.expandTmpl;
-    this._config.refreshColumns = () => { this.refreshColumns(); };
-    this._config.refreshData = (resetOffset?:boolean) => { this.refreshData(resetOffset); };
-    this._config.toggleIdColumn = () => {
-      this._config.showIdColumn = this.toggleColumn(this._config.idColumn.prop);
+    this.config.expandColumn.cellTemplate = this.expandTmpl;
+    this.config.refreshColumns = () => { this.refreshColumns(); };
+    this.config.refreshData = (resetOffset?:boolean) => { this.refreshData(resetOffset); };
+    this.config.toggleIdColumn = () => {
+      this.config.showIdColumn = this.toggleColumn(this.config.idColumn.prop);
     }
-    this._config.toggleColumn = (id: string) => {
+    this.config.toggleColumn = (id: string) => {
       this.toggleColumn(id);
     }
+    this.config.updateMappings = () => this.updateMappings();
   }
 
   updateMappings() {
-    if(this._config.showIdColumn) {
-      this._config.columns = {
-        ...{_id:this._config.idColumn },
-        ...this._config.columns
+    if(this.config.showIdColumn) {
+      this.config.columns = {
+        ...{_id:this.config.idColumn },
+        ...this.config.columns
       }
     }
-    if (this._config.showExpandColumn) {
-      this._config.columns = {
+    if (this.config.showExpandColumn) {
+      this.config.columns = {
         ...{_expandColumn: this._config.expandColumn},
         ...this._config.columns
       }
@@ -129,8 +130,8 @@ export class EsTableComponent implements OnInit {
     Object.keys(this._mappings.properties).forEach(key => {
       const item = this._mappings.properties[key];
       let newColumn: ColumnConfig;
-      if (this._config.columns[key]) {
-        newColumn = this._config.columns[key];
+      if (this.config.columns[key]) {
+        newColumn = this.config.columns[key];
         newColumn.addKeyword = false;
       } else {
         newColumn = {
@@ -151,82 +152,92 @@ export class EsTableComponent implements OnInit {
       }
 
       switch(newColumn.type) {
-        case 'basic':
-          break;
         case 'array':
           newColumn.cellTemplate = this.arrayTmpl;
           break;
         case 'object':
           newColumn.cellTemplate = this.objTmpl;
           break;
+        default:
+          if (item.type && this.config.dataConverters[item.type]) {
+            newColumn.cellTemplate = this.config.dataConverters[item.type].template;
+          }
+          break;
       }
-      this._config.columns[key] = newColumn;
+      this.config.columns[key] = newColumn;
     });
   }
 
   async setPage(pageInfo: any, text?: string) {
-    this._config.offset = pageInfo.offset;
+    this.config.offset = pageInfo.offset;
     await this.refreshData();
   }
 
   onSort(event) {
-    this._config.sortItem = {field: event.column.prop, type: event.newValue};
+    this.config.sortItem = {field: event.column.prop, type: event.newValue};
     if(event.column.addKeyword) {
-      this._config.sortItem.field = `${event.column.prop}.keyword`;
+      this.config.sortItem.field = `${event.column.prop}.keyword`;
     }
     this.refreshData();
   }
 
   refreshColumns() {
     const newColumns = [];
-    const configColumns = Object.keys(this._config.columns);
+    const configColumns = Object.keys(this.config.columns);
     configColumns.forEach(key => {
-      const column = this._config.columns[key];
+      const column = this.config.columns[key];
       if(!column.hide) {
+        if(column.width) {
+          column.width = null;
+        }
+        if (column.$$oldWidth) {
+          column.$$oldWidth = null;
+        }
         newColumns.push(column);
       } else {
         //column.width = null;
       }
     });
     this.columns = [...newColumns];
+    this.table.recalculate();
   }
 
 
   async refreshData(resetOffset?: boolean) {
     if(resetOffset) {
-      this._config.offset = 0;
+      this.config.offset = 0;
     }
     let sortItems: SortItem[] = [];
-    if(this._config.sortItem) {
-      sortItems = [this._config.sortItem];
+    if(this.config.sortItem) {
+      sortItems = [this.config.sortItem];
     }
     let tempRows = [];
     if(this.searchText) {
       const result = await this._service.searchData(
-          this._config.index,
+          this.config.index,
           this.searchText,
           sortItems,
-          (this._config.offset * this._config.limit),
-          this._config.limit);
+          (this.config.offset * this.config.limit),
+          this.config.limit);
 
-      this._config.totalCount = result.count;
+      this.config.totalCount = result.count;
       this.searchScore = result.score;
       tempRows = result.items;
     } else {
       tempRows = await this._service.getAll(
-        this._config.index,
+        this.config.index,
         sortItems,
-        (this._config.offset * this._config.limit),
-        this._config.limit);
+        (this.config.offset * this.config.limit),
+        this.config.limit);
     }
     this.rows = [...tempRows];
   }
 
   toggleColumn(col: string): boolean {
-    this._config.columns[col].hide = !this._config.columns[col].hide;
+    this.config.columns[col].hide = !this.config.columns[col].hide;
 
     this.refreshColumns();
-    return this._config.columns[col].hide;
+    return this.config.columns[col].hide;
   }
 
   toggleExpandRow(row) {
@@ -236,9 +247,12 @@ export class EsTableComponent implements OnInit {
   openConfig() {
     const dialogRef = this.dialog.open(TableConfigDialogComponent, {
       hasBackdrop: true,
+      disableClose: true,
       data: this._config
     });
-
+    dialogRef.afterClosed().subscribe(result => {
+      this.refreshColumns();
+    });
   }
 
 }

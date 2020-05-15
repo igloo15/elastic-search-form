@@ -1,0 +1,11 @@
+.form-container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-self: start;
+    align-items: flex-start;
+}
+
+es-field-wrapper {
+    padding-bottom: 8px;
+}

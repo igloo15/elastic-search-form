@@ -4,6 +4,7 @@
   "description": "A game of taking turns",
   "main": "index.js",
   "scripts": {
+    "start": "npm run serve",
     "clean": "rimraf dist",
     "serve": "npm run build:service:lib && npm run build:table:lib && ng serve",
     "update:version": "node ./configs/update-version.js",

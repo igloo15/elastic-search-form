@@ -1,0 +1,11 @@
+<mat-form-field>
+  <mat-chip-list #chipList aria-label="Item selection">
+    <mat-chip *ngFor="let item of getValue()" [removable]="!data.disabled" (removed)="remove(item)">
+      {{item}} <mat-icon matChipRemove *ngIf="!data.disabled">cancel</mat-icon>
+    </mat-chip>
+    <br>
+    <input [placeholder]="data.label" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)" [disabled]="data.disabled">
+  </mat-chip-list>
+</mat-form-field>
+

@@ -6,6 +6,29 @@
     justify-content: space-between;
 }
 
+.column-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.column-section {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+.table-settings {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-self: flex-start;
+    justify-content: space-between;
+    width: 100%;
+}
+
 mat-slide-toggle {
     margin-bottom: 10px;
 }

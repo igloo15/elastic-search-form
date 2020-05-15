@@ -1,11 +1,33 @@
 <h1 mat-dialog-title>Table Configuration</h1>
 <div mat-dialog-content class="config-table">
-    <mat-slide-toggle [checked]="data.showSearch" (change)="onSearchChange($event)">Show Search Box</mat-slide-toggle>
-    <mat-slide-toggle [checked]="data.showLimitDropDown" (change)="onDropDownChange($event)">Show Limit Drop Down</mat-slide-toggle>
-    <mat-slide-toggle [checked]="data.showRefresh" (change)="onRefreshChange($event)">Show Refresh Button</mat-slide-toggle>
+    <div class="table-settings">
+        <mat-slide-toggle [checked]="data.showSearch" (change)="onSearchChange($event)">Show Search Box</mat-slide-toggle>
+        <mat-slide-toggle [checked]="data.showLimitDropDown" (change)="onDropDownChange($event)">Show Limit Drop Down</mat-slide-toggle>
+        <mat-slide-toggle [checked]="data.showRefresh" (change)="onRefreshChange($event)">Show Refresh Button</mat-slide-toggle>
+    </div>
+    
     
     <hr>
-    <div *ngFor="let column of data.columns | keyvalue">
-        <mat-slide-toggle [checked]="!column.value.hide" (change)="onColumnHideChange(column.key)">Show {{column.value.name}} Column</mat-slide-toggle>
+    <h2>Columns</h2>
+    <div class="column-section">
+        <ng-container *ngFor="let column of data.columns | keyvalue">
+            <div class="column-item">
+                <h3>{{getName(column.value)}}</h3>
+                <mat-form-field *ngIf="column.value.name">
+                    <mat-label>Name</mat-label>
+                    <input matInput [value]="column.value.name" (keyup)="column.value.name = $event.target.value">
+                </mat-form-field>
+                <mat-form-field *ngIf="!column.value.name">
+                    <mat-label>Name</mat-label>
+                    <input matInput [value]="getName(column.value)" [disabled]="true">
+                </mat-form-field>
+                <mat-slide-toggle [checked]="!column.value.hide" (change)="onColumnHideChange(column.key)">Show Column</mat-slide-toggle>
+            </div>
+        </ng-container>
     </div>
+    
+    
+</div>
+<div mat-dialog-actions>
+    <button mat-raised-button (click)="onClose()" color="primary">Close</button>
 </div>

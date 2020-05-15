@@ -30,16 +30,22 @@ export class AppComponent {
           this.answer = result;
         });
 
-        this.elasticService.updateMapping('my-index', {
+        this.elasticService.updateMapping('my-new-index', {
           properties: {
-            newStuff: {
-              type: 'long',
+            myData: {
+              type: 'date',
               meta: {
                 array: 'false'
               }
             },
-            newString: {
-              type: 'text'
+            newNumbers: {
+              type: 'integer_range'
+            },
+            newIPs: {
+              type: 'ip_range'
+            },
+            location: {
+              type: 'geo_point'
             }
           }
         }).then((result: any) => {

@@ -1,5 +1,5 @@
-import { NgModule, InjectionToken, ModuleWithProviders } from '@angular/core';
-import { RouterModule , Routes } from '@angular/router';
+import { NgModule, ModuleWithProviders } from '@angular/core';
+import { Router, Routes } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { EsTableComponent } from './components/es-table/es-table.component';
@@ -47,6 +47,9 @@ export const tableRoutes: Routes = [
     ]
 })
 export class ElasticSearchTableModule {
+    constructor(router: Router) {
+        router.config.push(...tableRoutes);
+    }
     static forRoot(config: TableConfig): ModuleWithProviders {
         return {
             ngModule: ElasticSearchTableModule,
