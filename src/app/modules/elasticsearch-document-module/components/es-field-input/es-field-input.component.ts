@@ -1,26 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { ESField, ESFieldData } from '../../models/field-data';
 import { DocumentUtility } from '../../document-utility';
+import { EsComponentBase } from '../../models/es-component-base';
 
 @Component({
   selector: 'es-field-input',
   templateUrl: './es-field-input.component.html',
   styleUrls: ['./es-field-input.component.scss']
 })
-export class EsFieldInputComponent implements ESField, OnInit {
+export class EsFieldInputComponent extends EsComponentBase implements OnInit {
 
-  data: ESFieldData;
-
-  constructor() { }
+  constructor() { super(); }
 
   ngOnInit(): void {
   }
 
-  getValue() {
-    return DocumentUtility.getValue(this.data.key, this.data.model);
-  }
-
-  setValue(value: any) {
-    DocumentUtility.setValue(this.data.key, this.data.model, value);
-  }
 }

@@ -20,6 +20,7 @@ import { EsFieldToggleComponent } from './components/es-field-toggle/es-field-to
 import { EsFieldChipsComponent } from './components/es-field-chips/es-field-chips.component';
 import { EsFieldNumberInputComponent } from './components/es-field-number-input/es-field-number-input.component';
 import { EsFieldDateComponent } from './components/es-field-date/es-field-date.component';
+import { MatCardModule } from '@angular/material/card';
 
 export const documentRoutes: Routes = [
     { path: 'document/:index/view/:id', component: EsDocumentComponent},
@@ -38,6 +39,7 @@ export const documentRoutes: Routes = [
         MatSlideToggleModule,
         MatSelectModule,
         MatDatepickerModule,
+        MatCardModule,
         FormlyModule.forRoot(),
         FormlyMaterialModule
     ],

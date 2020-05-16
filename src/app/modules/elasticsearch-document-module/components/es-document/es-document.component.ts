@@ -2,12 +2,17 @@ import { Component, OnInit, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ElasticConnectionService, ESMapping, ESSubProperty } from '@igloo15/elasticsearch-angular-service';
 import { ActivatedRoute } from '@angular/router';
-import { ESDocumentConfig } from '../../models/document-config';
-import { ESCustomFieldConfig, ESFieldConfig } from '../../models/field-data';
+import { ESDocumentConfig, ESDocumentBuilder, ESDocumentRowConfig } from '../../models/document-config';
+import { ESCustomFieldConfig, ESFieldConfig, ESFieldData } from '../../models/field-data';
 import { TemplateFactoryService } from '../../services/template-factory.service';
 import { DocumentUtility } from '../../document-utility';
 import { EsDocumentService } from '../../services/es-document.service';
 import { ModelRoot, ModelProp } from '../../models/model-data';
+
+interface Row {
+  config: ESDocumentRowConfig;
+  items: ESFieldConfig[];
+}
 
 @Component({
   selector: 'es-document',
@@ -47,18 +52,17 @@ export class EsDocumentComponent implements OnInit {
     return this._config;
   }
 
-  public form = new FormGroup({});
-  public fields: ESFieldConfig[] = [];
+  public title = '';
+  public rows: Row[] = [];
 
   constructor(public esService: ElasticConnectionService, private route: ActivatedRoute, private documentService: EsDocumentService) {
-    this.config = new ESDocumentConfig('My Form');
+    this.config = new ESDocumentBuilder('', '', 'My Form').build();
   }
 
   ngOnInit(): void {
     this.route.url.subscribe(segments => {
-      console.log(segments);
       if (segments.length > 3) {
-        this.editFields = segments[2].path === 'edit';
+        this.config.disable = segments[2].path === 'view';
       }
     });
     this.route.paramMap.subscribe(params => {
@@ -71,32 +75,84 @@ export class EsDocumentComponent implements OnInit {
       this.queryES();
     });
     this.esService.isStarted.subscribe(async result => {
-      if(result && this.index && this.id) {
+      if(result) {
         await this.queryES();
       }
     });
   }
 
   async queryES() {
-    const mapping = await this.esService.getMapping(this.index);
-    const result = await this.esService.getById<any>(this.index, this.id);
-    if (result && mapping) {
-      this.model = this.documentService.parseModel(result, mapping);
-      console.log(this.documentService.parseModel(result, mapping));
-      this.updateFormConfig(mapping);
+    if(this.index && this.id) {
+      const mapping = await this.esService.getMapping(this.index);
+      const result = await this.esService.getById<any>(this.index, this.id);
+      if (result && mapping) {
+        this.model = this.documentService.parseModel(result, mapping);
+        console.log(this.model);
+        this.title = DocumentUtility.getTitle(this._config.title, this.model.value);
+        this.updateFormConfig(mapping);
+      }
     }
   }
 
   updateFormConfig(mapping: ESMapping) {
-    const newFields: ESFieldConfig[] = [];
-    for(const prop of this.model.properties) {
-      const formConfig = this.documentService.getConfig(prop, this.editFields);
-      newFields.push(formConfig);
+    if (this._config.fields.length > 0) {
+      this.rows = [...this.parseWithConfig()];
+    } else {
+      this.rows = [...this.parseWithoutConfig()];
     }
-    this.fields = [...newFields];
   }
 
   onSubmit() {
     console.log('saving');
+  }
+
+  private parseWithConfig() {
+    const newRows: Row[] = [];
+    for(const row of this._config.fields) {
+      const newRow: Row = {
+        config: row,
+        items: []
+      };
+      row.columns.forEach(value => {
+        if(this.config.disable) {
+          value.disable = this.config.disable;
+        }
+        const prop = this.documentService.getProp(value.key.split('.'), 0, this.model);
+        const result = this.documentService.getConfig(prop, value);
+        newRow.items.push(result);
+      });
+      newRows.push(newRow);
+    }
+    return newRows;
+  }
+
+  private parseWithoutConfig() {
+    const newRows: Row[] = [];
+    for(const prop of this.model.properties) {
+      const formConfig = this.documentService.getConfig(prop,
+        {
+          key:'',
+          type: '',
+          title: DocumentUtility.capitalize(prop.key),
+          disable: this.config.disable,
+          stretch: true
+        });
+      newRows.push({
+        config: {
+          columns:[],
+          stretch: true
+        },
+        items: [
+          formConfig
+        ]
+      });
+    }
+    return newRows;
+  }
+
+  getStyle(row: ESDocumentRowConfig) {
+    if(row.stretch) {
+      return 'width:100%';
+    }
   }
 }

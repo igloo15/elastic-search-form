@@ -4,6 +4,7 @@ import { ESMapping, ESSubProperty } from '@igloo15/elasticsearch-angular-service
 import { ESFieldConfig, ESCustomFieldConfig } from '../models/field-data';
 import { DocumentUtility } from '../document-utility';
 import { TemplateFactoryService } from './template-factory.service';
+import { ESFieldItemConfig } from '../models/document-config';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class EsDocumentService {
 
   constructor(private templateFactory: TemplateFactoryService) { }
 
-  getConfig(prop: ModelProp, editable: boolean): ESFieldConfig {
+  getConfig(prop: ModelProp, itemConfig: ESFieldItemConfig): ESFieldConfig {
     const customConfig: ESCustomFieldConfig = {};
     const label = DocumentUtility.capitalize(prop.key);
     let type = '';
@@ -38,9 +39,7 @@ export class EsDocumentService {
       const template = this.templateFactory.getTemplate(type).template;
       const configItem: ESFieldConfig = {
         data: {
-          disabled: !editable,
-          customConfig,
-          label,
+          config: itemConfig,
           type,
           model: prop
         },

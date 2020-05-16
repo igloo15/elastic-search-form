@@ -3,28 +3,24 @@ import { Component, OnInit } from '@angular/core';
 import { ESField, ESFieldData } from '../../models/field-data';
 import { DocumentUtility } from '../../document-utility';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { EsComponentBase } from '../../models/es-component-base';
 
 @Component({
   selector: 'es-field-chips',
   templateUrl: './es-field-chips.component.html',
   styleUrls: ['./es-field-chips.component.scss']
 })
-export class EsFieldChipsComponent implements ESField, OnInit {
+export class EsFieldChipsComponent extends EsComponentBase implements OnInit {
 
   visible = true;
   selectable = true;
   removable = true;
   addOnBlur = true;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-  data: ESFieldData;
 
-  constructor() { }
+  constructor() { super(); }
 
   ngOnInit(): void {
-  }
-
-  getValue() {
-    return DocumentUtility.getValue(this.data.key, this.data.model);
   }
 
   add(event: MatChipInputEvent): void {
@@ -43,10 +39,11 @@ export class EsFieldChipsComponent implements ESField, OnInit {
   }
 
   remove(item: string): void {
-    const index = this.getValue().indexOf(item);
+    const index = this.data.model.value.indexOf(item);
 
     if (index >= 0) {
       this.getValue().splice(index, 1);
     }
   }
+
 }

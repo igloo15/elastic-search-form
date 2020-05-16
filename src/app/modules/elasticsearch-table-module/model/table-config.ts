@@ -97,8 +97,8 @@ export class TableConfig {
         this.columns = columns ? columns : {};
     }
 
-    toggleIdColumn: () => void
-    toggleColumn: (id: string) => void
+    toggleIdColumn: () => void = () => {};
+    toggleColumn: (id: string) => void = (id: string) => {};
 
     refreshColumns: () => void = () => {};
     refreshData: (resetOffset?: boolean) => void = (resetOffset?: boolean) => {};

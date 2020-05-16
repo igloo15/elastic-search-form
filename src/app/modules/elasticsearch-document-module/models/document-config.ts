@@ -2,55 +2,85 @@ import { TemplateRef, Type } from '@angular/core';
 import { ESFieldData } from './field-data';
 
 
+export type TitleType = string | ((model: any) => string);
+
+
 export interface ESFieldItemConfig {
-    label: string;
+    key: string;
     type: string;
+    title?: TitleType;
+    disable?: boolean;
+    stretch?: boolean;
+    width?: string;
+    height?: string;
 }
 
 export interface ESDocumentRowConfig {
-    title: string;
+    stretch?: boolean;
+    width?: string;
+    height?: string;
+    title?: TitleType;
     columns: ESFieldItemConfig[];
-    addItem: (item: ESFieldItemConfig) => ESDocumentRowConfig;
 }
 
-class ConcreteRowConfig implements ESDocumentRowConfig {
-    title = '';
-    columns: ESFieldItemConfig[] = [];
-
-    addItem(item: ESFieldItemConfig) {
-        this.columns.push(item);
-        return this;
-    }
-}
-
-type TitleType = string | ((model: any) => string);
-
-export class ESDocumentConfig {
+export interface ESDocumentConfig {
     index: string;
     id: string;
-    title: (model: any) => string;
-    fields: ESDocumentRowConfig[] = [];
+    fields: ESDocumentRowConfig[];
+    title?: TitleType;
+    disable?: boolean;
+}
+
+export class ESDocumentRowBuilder {
+    data: ESDocumentRowConfig;
 
     constructor(title: TitleType) {
-        if (typeof title === 'string') {
-            this.title = (model: any) => title;
-        } else {
-            this.title = title;
+        this.data = {
+            title,
+            columns: []
         }
     }
 
-    getTitle(model: any) {
-        return this.title(model);
+    addItem(item: ESFieldItemConfig): ESDocumentRowBuilder {
+        this.data.columns.push(item);
+        return this;
     }
 
-    addRow(): ESDocumentRowConfig {
-        const row = this.createRow();
-        this.fields.push(row);
+    build() {
+        return this.data;
+    }
+}
+
+export class ESDocumentBuilder {
+    data: ESDocumentConfig;
+    rowBuilders: ESDocumentRowBuilder[] = [];
+
+    constructor(index?: string, id?: string, title?: TitleType) {
+        this.data = {
+            title: title ?? '',
+            index,
+            id,
+            fields: []
+        }
+    }
+
+    build(): ESDocumentConfig {
+        const newFields: ESDocumentRowConfig[] = [];
+        this.rowBuilders.forEach(value => {
+            newFields.push(value.build());
+        });
+        this.data.fields = [...newFields];
+        return this.data;
+    }
+
+    addRow(title: TitleType): ESDocumentRowBuilder {
+        const row = this.createRow(title);
+        this.rowBuilders.push(row);
         return row;
     }
 
-    private createRow() {
-        return new ConcreteRowConfig();
+    private createRow(title: TitleType): ESDocumentRowBuilder {
+        return new ESDocumentRowBuilder(title);
     }
 }
 

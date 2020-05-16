@@ -1,22 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { DocumentUtility } from '../../document-utility';
 import { ESField, ESFieldData } from '../../models/field-data';
+import { EsComponentBase } from '../../models/es-component-base';
 
 @Component({
   selector: 'es-field-date',
   templateUrl: './es-field-date.component.html',
   styleUrls: ['./es-field-date.component.scss']
 })
-export class EsFieldDateComponent implements ESField, OnInit {
-  data: ESFieldData;
+export class EsFieldDateComponent extends EsComponentBase implements OnInit {
 
-  constructor() { }
+  constructor() { super(); }
 
   ngOnInit(): void {
   }
 
-
-  getValue() {
-    return DocumentUtility.getValue(this.data.key, this.data.model);
-  }
 }

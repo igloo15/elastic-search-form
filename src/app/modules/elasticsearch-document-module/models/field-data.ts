@@ -1,5 +1,6 @@
 import { Type } from '@angular/core';
 import { ModelProp } from './model-data';
+import { ESFieldItemConfig } from './document-config';
 
 export interface ESFieldConfig {
     data: ESFieldData;
@@ -12,10 +13,8 @@ export interface ESField {
 
 export interface ESFieldData {
     type: string;
-    disabled: boolean;
-    customConfig?: ESCustomFieldConfig;
+    config?: ESFieldItemConfig;
     model: ModelProp;
-    label: string;
 }
 
 export interface ESFieldDefinition {
