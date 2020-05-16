@@ -88,6 +88,7 @@ export class EsTableComponent implements OnInit {
       if (params.get('offset') && this.config) {
         this.configService.offset = +params.get('offset');
       }
+      this.startUp();
     });
 
   }
@@ -187,12 +188,12 @@ export class EsTableComponent implements OnInit {
     configColumns.forEach(key => {
       const column = this.config.columns[key];
       if(!column.hide) {
-        if(column.width) {
-          column.width = null;
-        }
-        if (column.$$oldWidth) {
-          column.$$oldWidth = null;
-        }
+        // if(column.width) {
+        //   column.width = null;
+        // }
+        // if (column.$$oldWidth) {
+        //   column.$$oldWidth = null;
+        // }
         newColumns.push(column);
       } else {
         //column.width = null;

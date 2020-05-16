@@ -3,8 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { Routes, Router } from '@angular/router';
 import { EsDocumentComponent } from './components/es-document/es-document.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { FormlyModule } from '@ngx-formly/core';
-import { FormlyMaterialModule } from '@ngx-formly/material';
 import { EsFieldWrapperComponent } from './components/es-field-wrapper/es-field-wrapper.component';
 import { EsFieldHostDirective } from './components/es-field-host.directive';
 import { EsFieldInputComponent } from './components/es-field-input/es-field-input.component';
@@ -39,9 +37,7 @@ export const documentRoutes: Routes = [
         MatSlideToggleModule,
         MatSelectModule,
         MatDatepickerModule,
-        MatCardModule,
-        FormlyModule.forRoot(),
-        FormlyMaterialModule
+        MatCardModule
     ],
     exports: [
     ],

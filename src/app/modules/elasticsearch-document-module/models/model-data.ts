@@ -6,6 +6,7 @@ export interface ModelProp {
     key: string;
     type: ModelTypes;
     value: any;
+    childType?: ModelTypes;
     properties?: ModelProp[];
 }
 

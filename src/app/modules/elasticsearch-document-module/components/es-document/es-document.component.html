@@ -1,12 +1,16 @@
-<mat-card>
+<mat-card [style]="getStyle(config.style)">
     <mat-card-header>
         <mat-card-title>{{title}}</mat-card-title>
     </mat-card-header>
     <mat-card-content class="form-container">
-        <div *ngFor="let row of rows" [style]="getStyle(row.config)">
+        <div *ngFor="let row of rows" [style]="getStyle(row.config.style)" class="form-row">
             <ng-container *ngFor="let item of row.items">
-                <es-field-wrapper [config]="item"></es-field-wrapper>
+                <es-field-wrapper [config]="item" [style]="getStyle(item.data.config.style)"></es-field-wrapper>
             </ng-container>
         </div>
     </mat-card-content>
+    <mat-card-actions>
+        <button style="font-weight: bold;" mat-button (click)="save()">SAVE</button>
+        <button style="font-weight: bold;" mat-button (click)="cancel()">CANCEL</button>
+    </mat-card-actions>
 </mat-card>

@@ -4,22 +4,23 @@ import { ESFieldData } from './field-data';
 
 export type TitleType = string | ((model: any) => string);
 
-
-export interface ESFieldItemConfig {
-    key: string;
-    type: string;
-    title?: TitleType;
-    disable?: boolean;
+export interface ESDocumentStyleConfig {
     stretch?: boolean;
     width?: string;
     height?: string;
 }
 
-export interface ESDocumentRowConfig {
-    stretch?: boolean;
-    width?: string;
-    height?: string;
+export interface ESFieldItemConfig {
+    key: string;
+    type: string;
+    style: ESDocumentStyleConfig;
     title?: TitleType;
+    disable?: boolean;
+}
+
+export interface ESDocumentRowConfig {
+    title?: TitleType;
+    style: ESDocumentStyleConfig;
     columns: ESFieldItemConfig[];
 }
 
@@ -27,6 +28,8 @@ export interface ESDocumentConfig {
     index: string;
     id: string;
     fields: ESDocumentRowConfig[];
+    style: ESDocumentStyleConfig;
+    redirect?: string;
     title?: TitleType;
     disable?: boolean;
 }
@@ -37,7 +40,8 @@ export class ESDocumentRowBuilder {
     constructor(title: TitleType) {
         this.data = {
             title,
-            columns: []
+            columns: [],
+            style: {}
         }
     }
 
@@ -60,7 +64,8 @@ export class ESDocumentBuilder {
             title: title ?? '',
             index,
             id,
-            fields: []
+            fields: [],
+            style: {}
         }
     }
 

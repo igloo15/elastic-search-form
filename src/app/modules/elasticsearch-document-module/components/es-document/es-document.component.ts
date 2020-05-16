@@ -1,18 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { ElasticConnectionService, ESMapping, ESSubProperty } from '@igloo15/elasticsearch-angular-service';
-import { ActivatedRoute } from '@angular/router';
-import { ESDocumentConfig, ESDocumentBuilder, ESDocumentRowConfig } from '../../models/document-config';
-import { ESCustomFieldConfig, ESFieldConfig, ESFieldData } from '../../models/field-data';
-import { TemplateFactoryService } from '../../services/template-factory.service';
+import { ElasticConnectionService } from '@igloo15/elasticsearch-angular-service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ESDocumentConfig, ESDocumentBuilder, ESDocumentStyleConfig } from '../../models/document-config';
 import { DocumentUtility } from '../../document-utility';
-import { EsDocumentService } from '../../services/es-document.service';
-import { ModelRoot, ModelProp } from '../../models/model-data';
+import { EsDocumentService, Row } from '../../services/es-document.service';
+import { ModelRoot } from '../../models/model-data';
 
-interface Row {
-  config: ESDocumentRowConfig;
-  items: ESFieldConfig[];
-}
 
 @Component({
   selector: 'es-document',
@@ -21,7 +14,6 @@ interface Row {
 })
 export class EsDocumentComponent implements OnInit {
 
-  private editFields = false;
   public model: ModelRoot;
 
   @Input()
@@ -55,8 +47,11 @@ export class EsDocumentComponent implements OnInit {
   public title = '';
   public rows: Row[] = [];
 
-  constructor(public esService: ElasticConnectionService, private route: ActivatedRoute, private documentService: EsDocumentService) {
+  constructor(public esService: ElasticConnectionService, private route: ActivatedRoute,
+    private documentService: EsDocumentService, private router: Router) {
     this.config = new ESDocumentBuilder('', '', 'My Form').build();
+    this.config.style.stretch = true;
+    this.config.redirect = '/table/test';
   }
 
   ngOnInit(): void {
@@ -81,7 +76,7 @@ export class EsDocumentComponent implements OnInit {
     });
   }
 
-  async queryES() {
+  private async queryES() {
     if(this.index && this.id) {
       const mapping = await this.esService.getMapping(this.index);
       const result = await this.esService.getById<any>(this.index, this.id);
@@ -89,70 +84,37 @@ export class EsDocumentComponent implements OnInit {
         this.model = this.documentService.parseModel(result, mapping);
         console.log(this.model);
         this.title = DocumentUtility.getTitle(this._config.title, this.model.value);
-        this.updateFormConfig(mapping);
+        this.updateFormConfig();
       }
     }
   }
 
-  updateFormConfig(mapping: ESMapping) {
+  private updateFormConfig() {
     if (this._config.fields.length > 0) {
-      this.rows = [...this.parseWithConfig()];
+      this.rows = [...this.documentService.parseWithConfig(this.model, this.config)];
     } else {
-      this.rows = [...this.parseWithoutConfig()];
+      this.rows = [...this.documentService.parseWithoutConfig(this.model, this.config)];
     }
   }
 
-  onSubmit() {
-    console.log('saving');
+  private getStyle(config: ESDocumentStyleConfig) {
+    return DocumentUtility.getStyle(config);
   }
 
-  private parseWithConfig() {
-    const newRows: Row[] = [];
-    for(const row of this._config.fields) {
-      const newRow: Row = {
-        config: row,
-        items: []
-      };
-      row.columns.forEach(value => {
-        if(this.config.disable) {
-          value.disable = this.config.disable;
-        }
-        const prop = this.documentService.getProp(value.key.split('.'), 0, this.model);
-        const result = this.documentService.getConfig(prop, value);
-        newRow.items.push(result);
-      });
-      newRows.push(newRow);
-    }
-    return newRows;
+  private save() {
+    const newModel = this.documentService.recreateData(this.model);
+    console.log(newModel);
+    this.esService.updateData(this.config.index, newModel, this.config.id);
+    this.redirectConfig();
   }
 
-  private parseWithoutConfig() {
-    const newRows: Row[] = [];
-    for(const prop of this.model.properties) {
-      const formConfig = this.documentService.getConfig(prop,
-        {
-          key:'',
-          type: '',
-          title: DocumentUtility.capitalize(prop.key),
-          disable: this.config.disable,
-          stretch: true
-        });
-      newRows.push({
-        config: {
-          columns:[],
-          stretch: true
-        },
-        items: [
-          formConfig
-        ]
-      });
-    }
-    return newRows;
+  private cancel() {
+    this.redirectConfig();
   }
 
-  getStyle(row: ESDocumentRowConfig) {
-    if(row.stretch) {
-      return 'width:100%';
+  private redirectConfig() {
+    if (this.config.redirect) {
+      this.router.navigate([this.config.redirect]);
     }
   }
 }

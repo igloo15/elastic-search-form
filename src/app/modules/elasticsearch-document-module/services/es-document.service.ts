@@ -4,7 +4,13 @@ import { ESMapping, ESSubProperty } from '@igloo15/elasticsearch-angular-service
 import { ESFieldConfig, ESCustomFieldConfig } from '../models/field-data';
 import { DocumentUtility } from '../document-utility';
 import { TemplateFactoryService } from './template-factory.service';
-import { ESFieldItemConfig } from '../models/document-config';
+import { ESFieldItemConfig, ESDocumentRowConfig, ESDocumentConfig } from '../models/document-config';
+
+
+export interface Row {
+  config: ESDocumentRowConfig;
+  items: ESFieldConfig[];
+}
 
 @Injectable({
   providedIn: 'root'
@@ -88,7 +94,9 @@ export class EsDocumentService {
       key,
       value: prop
     }
-    if (modelType === 'object') {
+    if (modelType === 'array') {
+      propModel.childType = this.getType(prop[0], subMap);
+    } else if (modelType === 'object') {
       propModel.properties = [];
       Object.keys(props).forEach((subKey, index) => {
         const subMapValue = props[subKey];
@@ -199,5 +207,53 @@ export class EsDocumentService {
       propData = prop.value;
     }
     return propData;
+  }
+
+  parseWithConfig(model: ModelRoot, config: ESDocumentConfig): Row[] {
+    const newRows: Row[] = [];
+    for(const row of config.fields) {
+      const newRow: Row = {
+        config: row,
+        items: []
+      };
+      row.columns.forEach(value => {
+        if(config.disable) {
+          value.disable = config.disable;
+        }
+        const prop = this.getProp(value.key.split('.'), 0, model);
+        const result = this.getConfig(prop, value);
+        newRow.items.push(result);
+      });
+      newRows.push(newRow);
+    }
+    return newRows;
+  }
+
+  parseWithoutConfig(model: ModelRoot, config: ESDocumentConfig): Row[] {
+    const newRows: Row[] = [];
+    for(const prop of model.properties) {
+      const formConfig = this.getConfig(prop,
+        {
+          key:'',
+          type: '',
+          title: DocumentUtility.capitalize(prop.key),
+          disable: config.disable,
+          style: {
+            stretch: true
+          }
+        });
+      newRows.push({
+        config: {
+          columns:[],
+          style: {
+            stretch: true
+          }
+        },
+        items: [
+          formConfig
+        ]
+      });
+    }
+    return newRows;
   }
 }

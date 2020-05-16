@@ -15,4 +15,7 @@ export class EsFieldInputComponent extends EsComponentBase implements OnInit {
   ngOnInit(): void {
   }
 
+  onChange(event: any) {
+    this.setValue(event.target.value);
+  }
 }

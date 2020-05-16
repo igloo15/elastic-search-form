@@ -5,7 +5,7 @@ export class EsComponentBase implements ESField {
     data: ESFieldData;
 
     getStyle() {
-        return DocumentUtility.getStyle(this.data.config);
+        return DocumentUtility.getStyle(this.data.config.style);
     }
 
     getValue() {
