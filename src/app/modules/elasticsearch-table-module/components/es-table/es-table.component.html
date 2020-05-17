@@ -12,7 +12,9 @@
         </mat-form-field>
         
         <div class="spacer"></div>
-        
+        <button mat-mini-fab color="primary" (click)="scrollUpOrDown(bottomButton)" class="button-margins" *ngIf="config.showRefresh" #topButton>
+            <mat-icon>arrow_downward</mat-icon>
+        </button>
         <button mat-mini-fab color="primary" (click)="refreshData()" class="button-margins" *ngIf="config.showRefresh">
             <mat-icon>refresh</mat-icon>
         </button>
@@ -30,18 +32,20 @@
         [loadingIndicator]="loading"
         [headerHeight]="50"
         [footerHeight]="50"
-        rowHeight="auto"
+        [rowHeight]="'auto'"
         [count]="config.totalCount" 
         [externalPaging]="true"
         [externalSorting]="true"
         [offset]="config.offset" 
         [limit]="config.limit" 
         [swapColumns]="true"
+        [scrollbarH]="config.scrollbarH"
+        [scrollbarV]="config.scrollbarV"
         (page)="setPage($event)"
         (sort)="onSort($event)"
         class="material">
         <!-- Row Detail Template -->
-        <ngx-datatable-row-detail [rowHeight]="100" #myDetailRow>
+        <ngx-datatable-row-detail [rowHeight]="auto" #myDetailRow>
             <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
                 <ngx-json-viewer [json]="row" [expanded]="false"></ngx-json-viewer>
             </ng-template>
@@ -68,4 +72,13 @@
     <ng-template #objTmpl let-row="row" let-value="value">
         <ngx-json-viewer [json]="value" [expanded]="false"></ngx-json-viewer>
     </ng-template>
+
+    <ng-template #linkTmpl let-row="row" let-value="value" let-column="column">
+        <button mat-raised-button [routerLink]="documentRoute(row, value, column)" routerLinkActive="router-link-active">{{column.name}}</button>
+    </ng-template>
+    <div class="bottom-container">
+        <button mat-mini-fab color="primary" (click)="scrollUpOrDown(topButton)" class="button-margins" *ngIf="config.showRefresh" #bottomButton>
+            <mat-icon>arrow_upward</mat-icon>
+        </button>
+    </div>
 </div>

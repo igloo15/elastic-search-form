@@ -41,7 +41,12 @@ export class TemplateFactoryService {
   }
 
   getTemplate(type: string): ESFieldDefinition {
-    return this.definitions.get(type);
+    const template = this.definitions.get(type);
+    if (template) {
+      return template;
+    } else {
+      return { type: 'input', template: EsFieldInputComponent };
+    }
   }
 
 }

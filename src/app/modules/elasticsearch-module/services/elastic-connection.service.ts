@@ -129,6 +129,14 @@ export class ElasticConnectionService {
     return await this._client.indices.flush({index});
   }
 
+  async createOrUpdateIndex(index: string, config: ESIndexCreation): Promise<any> {
+    const indexExistsResult = await this.indexExists(index);
+    if (indexExistsResult) {
+      return await this.updateMapping(index, config.mappings);
+    }
+    return await this.createIndex(index, config);
+  }
+
   async createIndex(index: string, config: ESIndexCreation): Promise<any> {
     return await this._client.indices.create({
       index,

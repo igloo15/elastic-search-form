@@ -20,27 +20,7 @@ export class EsDocumentService {
   constructor(private templateFactory: TemplateFactoryService) { }
 
   getConfig(prop: ModelProp, itemConfig: ESFieldItemConfig): ESFieldConfig {
-    const customConfig: ESCustomFieldConfig = {};
-    const label = DocumentUtility.capitalize(prop.key);
-    let type = '';
-    switch(prop.type) {
-      case 'integer':
-      case 'double':
-        type = 'number';
-        break;
-      case 'date':
-        type = 'datepicker';
-        break;
-      case 'string':
-        type = 'input';
-        break;
-      case 'array':
-        type = prop.type;
-        break;
-      default:
-        type = prop.type;
-        break;
-    }
+    const type = this.convertToTemplateType(prop, itemConfig);
     if (type) {
       const template = this.templateFactory.getTemplate(type).template;
       const configItem: ESFieldConfig = {
@@ -56,6 +36,8 @@ export class EsDocumentService {
     }
     return null;
   }
+
+  
 
   getProp(keys: string[], index: number, model: ModelRoot | ModelProp) {
     if (model.properties) {
@@ -108,9 +90,31 @@ export class EsDocumentService {
     return propModel;
   }
 
+  convertToTemplateType(prop: ModelProp, itemConfig: ESFieldItemConfig) {
+    if (itemConfig.type) {
+      return itemConfig.type;
+    }
+    switch(prop.type) {
+      case 'integer':
+      case 'double':
+        return 'number';
+      case 'date':
+      case 'date_nanos':
+        return 'datepicker';
+      case 'string':
+        return 'input';
+      case 'bool':
+        return 'toggle';
+      case 'array':
+        return prop.type;
+      default:
+        return prop.type;
+    }
+  }
+
   getType(prop: any, subMap?: ESSubProperty): ModelTypes {
     let result: ModelTypes = 'object';
-    if (!prop) {
+    if ((prop === null || prop === undefined)) {
       if (subMap.properties) {
         result = 'object';
       } else if (subMap.meta?.array) {
@@ -149,8 +153,8 @@ export class EsDocumentService {
     }
 
     if (typeof prop === 'string') {
-      if (subMap.type === 'date') {
-        result = 'date';
+      if (subMap.type === 'date' || subMap.type === 'date_nanos') {
+        result = subMap.type;
       } else {
         result = 'string';
       }
@@ -169,13 +173,8 @@ export class EsDocumentService {
           result = 'double';
           break;
         case 'date_nanos':
-          result = 'date';
+          result = 'date_nanos';
           break;
-      }
-      if (subMap.type) {
-        result = 'integer';
-      } else {
-        result = 'double';
       }
     } else if (typeof prop === 'boolean') {
       result = 'bool';

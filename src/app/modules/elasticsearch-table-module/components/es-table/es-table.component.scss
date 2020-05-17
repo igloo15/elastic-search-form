@@ -26,6 +26,16 @@ mat-form-field {
   align-items: center;
 }
 
+.bottom-container {
+  width: 100%;
+  padding-top: 10px;
+  display:flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-items: flex-end;
+  justify-content: flex-end;
+}
+
 .button-margins {
   margin-right: 8px;
 }

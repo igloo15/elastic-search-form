@@ -22,35 +22,77 @@ export class AppComponent {
       .then((value: string) => {
         this.answer = value;
         const myGenerator = new DataGenerator();
-        const dataCount = 5;
+        const dataCount = 2;
         for(let i = 0; i < dataCount; i++) {
-          this.elasticService.updateData('test', myGenerator.createBasicData());
+          this.elasticService.updateData('new-test', myGenerator.createNewBasicData());
         }
         this.elasticService.searchData('test', 'Jerod').then((result: any) => {
           this.answer = result;
         });
-
-        this.elasticService.updateMapping('my-new-index', {
-          properties: {
-            myData: {
-              type: 'date',
-              meta: {
-                array: 'false'
+        this.elasticService.createOrUpdateIndex('new-test', {
+          settings: {},
+          mappings: {
+            properties: {
+              testData: {
+                type: 'object',
+                properties: {
+                  date: {
+                    type: 'date'
+                  },
+                  dateTime: {
+                    type: 'date_nanos'
+                  },
+                  isEnabled: {
+                    type: 'boolean'
+                  }
+                }
+              },
+              testArray: {
+                type: 'integer'
+              },
+              testDouble: {
+                type: 'double'
+              },
+              testIP: {
+                type: 'ip'
+              },
+              testText: {
+                type: 'text'
+              },
+              testEnabled: {
+                type: 'boolean'
+              },
+              testDate: {
+                type: 'date'
+              },
+              testDateTime: {
+                type: 'date_nanos'
               }
-            },
-            newNumbers: {
-              type: 'integer_range'
-            },
-            newIPs: {
-              type: 'ip_range'
-            },
-            location: {
-              type: 'geo_point'
             }
           }
-        }).then((result: any) => {
-          console.log(result);
-        });
+        }).then(result => { console.log(result) });
+
+        // this.elasticService.updateMapping('my-new-index', {
+        //   properties: {
+        //     myData: {
+        //       type: 'date',
+        //       meta: {
+        //         array: 'false'
+        //       }
+        //     },
+        //     newNumbers: {
+        //       type: 'integer_range'
+        //     },
+        //     newIPs: {
+        //       type: 'ip_range'
+        //     },
+        //     location: {
+        //       type: 'geo_point'
+        //     }
+        //   }
+        // }).then((result: any) => {
+        //   console.log(result);
+        // });
         setTimeout(() => {
           this.tableConfig.toggleColumn('age');
           this.tableConfig.showExpandColumn = false;

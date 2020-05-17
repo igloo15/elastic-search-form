@@ -18,7 +18,8 @@
   },
   "homepage": "https://github.com/igloo15/elastic-search-form#readme",
   "dependencies": {
-    "@igloo15/elasticsearch-angular-service": "^0.2.0-dev.8"
+    "@igloo15/elasticsearch-angular-service": "^0.3.0-dev.2",
+    "@angular-material-components/datetime-picker": "^2.0.4"
   },
   "peerDependencies": {
     "@angular/common": "^9.1.4",

@@ -5,8 +5,11 @@ export interface ColumnConfig {
     prop: string;
     name?: string;
     displayName?: string;
-    type?: 'basic'|'array'|'object';
+    type?: 'basic'|'array'|'object'|'link';
     minWidth?: number;
+    maxWidth?: number;
+    frozenLeft?: boolean;
+    frozenRight?: boolean;
     width?: number;
     $$oldWidth?: number;
     resizeable?: boolean;
@@ -62,6 +65,26 @@ export class TableConfig {
         this.refreshColumns();
     }
 
+    private _showViewColumn = true;
+    public get showViewColumn() {
+        return this._showViewColumn;
+    }
+    public set showViewColumn(val: boolean) {
+        this._showViewColumn = val;
+        this.viewColumn.hide = !val;
+        this.refreshColumns();
+    }
+
+    private _showEditColumn = true;
+    public get showEditColumn() {
+        return this._showEditColumn;
+    }
+    public set showEditColumn(val: boolean) {
+        this._showEditColumn = val;
+        this.editColumn.hide = !val;
+        this.refreshColumns();
+    }
+
     public offset = 0;
     public totalCount = 0;
 
@@ -69,6 +92,8 @@ export class TableConfig {
     public showLimitDropDown = true;
     public showRefresh = true;
     public showConfigButton = true;
+    public scrollbarH = true;
+    public scrollbarV = false;
 
     public sortItem?: SortItem;
     public dataConverters: {[key:string]: ESDataTypeConverter} = {};
@@ -78,10 +103,13 @@ export class TableConfig {
         name: '',
         displayName: 'Expand Column',
         width: 50,
+        minWidth:50,
+        maxWidth:50,
         resizeable: false,
         sortable: false,
         draggable: false,
-        canAutoResize: false
+        canAutoResize: false,
+        frozenLeft: false
     }
 
     public idColumn: ColumnConfig = {
@@ -90,6 +118,32 @@ export class TableConfig {
         hide: false,
         type: 'basic',
         sortable: false
+    }
+
+    readonly buttonWidth = 90;
+
+    public viewColumn: ColumnConfig = {
+        prop: '',
+        name: 'View',
+        hide: false,
+        type: 'link',
+        sortable: false,
+        width: this.buttonWidth,
+        minWidth: this.buttonWidth,
+        maxWidth: this.buttonWidth,
+        frozenRight: false
+    }
+
+    public editColumn: ColumnConfig = {
+        prop: '',
+        name: 'Edit',
+        hide: false,
+        type: 'link',
+        sortable: false,
+        width: this.buttonWidth,
+        minWidth: this.buttonWidth,
+        maxWidth: this.buttonWidth,
+        frozenRight: false
     }
 
     constructor(myIndex: string, columns?: ColumnCollection) {

@@ -1,5 +1,5 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
-import { Router, Routes } from '@angular/router';
+import { Router, Routes, RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { EsTableComponent } from './components/es-table/es-table.component';
@@ -39,7 +39,8 @@ export const tableRoutes: Routes = [
         MatSelectModule,
         NgxDatatableModule,
         ElasticSearchServiceModule,
-        NgxJsonViewerModule
+        NgxJsonViewerModule,
+        RouterModule
     ],
     exports: [
         EsTableComponent,

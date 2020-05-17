@@ -16,7 +16,7 @@ export class EsFieldToggleComponent extends EsComponentBase implements OnInit {
   ngOnInit(): void {
   }
 
-  onChange(event: MatSlideToggleChange) {
+  onToggleChange(event: MatSlideToggleChange) {
     this.setValue(event.checked);
   }
 

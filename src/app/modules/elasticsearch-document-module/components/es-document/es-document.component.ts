@@ -15,6 +15,7 @@ import { ModelRoot } from '../../models/model-data';
 export class EsDocumentComponent implements OnInit {
 
   public model: ModelRoot;
+  public isLoading = true;
 
   @Input()
   public set index(val: string) {
@@ -51,7 +52,7 @@ export class EsDocumentComponent implements OnInit {
     private documentService: EsDocumentService, private router: Router) {
     this.config = new ESDocumentBuilder('', '', 'My Form').build();
     this.config.style.stretch = true;
-    this.config.redirect = '/table/test';
+    this.config.redirectToTable = true;
   }
 
   ngOnInit(): void {
@@ -77,6 +78,7 @@ export class EsDocumentComponent implements OnInit {
   }
 
   private async queryES() {
+    this.isLoading = true;
     if(this.index && this.id) {
       const mapping = await this.esService.getMapping(this.index);
       const result = await this.esService.getById<any>(this.index, this.id);
@@ -85,6 +87,7 @@ export class EsDocumentComponent implements OnInit {
         console.log(this.model);
         this.title = DocumentUtility.getTitle(this._config.title, this.model.value);
         this.updateFormConfig();
+        this.isLoading = false;
       }
     }
   }
@@ -97,24 +100,29 @@ export class EsDocumentComponent implements OnInit {
     }
   }
 
-  private getStyle(config: ESDocumentStyleConfig) {
+  getStyle(config: ESDocumentStyleConfig) {
     return DocumentUtility.getStyle(config);
   }
 
-  private save() {
+  save() {
     const newModel = this.documentService.recreateData(this.model);
     console.log(newModel);
     this.esService.updateData(this.config.index, newModel, this.config.id);
     this.redirectConfig();
   }
 
-  private cancel() {
+  cancel() {
     this.redirectConfig();
   }
 
   private redirectConfig() {
     if (this.config.redirect) {
       this.router.navigate([this.config.redirect]);
+      return;
+    }
+    if (this.config.redirectToTable) {
+      this.router.navigate(['table', this.config.index]);
+      return;
     }
   }
 }

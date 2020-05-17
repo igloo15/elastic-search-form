@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, TemplateRef, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, Input, TemplateRef, ViewChild, Inject, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ColumnMode, DatatableComponent } from '@swimlane/ngx-datatable';
 import { ElasticConnectionService, ESMapping, SortItem } from '@igloo15/elasticsearch-angular-service';
@@ -20,6 +20,9 @@ export class EsTableComponent implements OnInit {
   @ViewChild('arrayTmpl', { static: true }) arrayTmpl: TemplateRef<any>;
   @ViewChild('objTmpl', { static: true }) objTmpl: TemplateRef<any>;
   @ViewChild('expandTmpl', { static: true }) expandTmpl: TemplateRef<any>;
+  @ViewChild('linkTmpl', { static: true }) linkTmpl: TemplateRef<any>;
+  @ViewChild('topButton', { static: false }) topButton: ElementRef<HTMLButtonElement>;
+  @ViewChild('bottomButton', { static: false }) bottomButton: ElementRef<HTMLButtonElement>;
 
   private _dataTable: DatatableComponent;
   @ViewChild('esTable') set table(dataTable: DatatableComponent) {
@@ -93,6 +96,14 @@ export class EsTableComponent implements OnInit {
 
   }
 
+  scrollUpOrDown($element: any) {
+    $element._elementRef.nativeElement.scrollIntoView({
+      inline: 'nearest',
+      block: 'start',
+      behavior: 'smooth'
+    });
+  }
+
   async startUp() {
     this._mappings = await this._service.getMapping(this.config.index);
     this.config.totalCount = await this._service.getCount(this.config.index);
@@ -104,6 +115,8 @@ export class EsTableComponent implements OnInit {
 
   updateConfigFunction() {
     this.config.expandColumn.cellTemplate = this.expandTmpl;
+    this.config.viewColumn.cellTemplate = this.linkTmpl;
+    this.config.editColumn.cellTemplate = this.linkTmpl;
     this.config.refreshColumns = () => { this.refreshColumns(); };
     this.config.refreshData = (resetOffset?:boolean) => { this.refreshData(resetOffset); };
     this.config.toggleIdColumn = () => {
@@ -167,6 +180,18 @@ export class EsTableComponent implements OnInit {
       }
       this.config.columns[key] = newColumn;
     });
+    if (this.config.showViewColumn) {
+      this.config.columns = {
+        ...this.config.columns,
+        ...{_viewColumn: this.config.viewColumn}
+      }
+    }
+    if (this.config.showEditColumn) {
+      this.config.columns = {
+        ...this.config.columns,
+        ...{_editColumn: this.config.editColumn}
+      }
+    }
   }
 
   async setPage(pageInfo: any, text?: string) {
@@ -254,6 +279,11 @@ export class EsTableComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       this.refreshColumns();
     });
+  }
+
+  documentRoute(row: any, value: any, column: any) {
+    const route = column.name === 'View' ? 'view' : 'edit';
+    return ['/document', this.config.index, route, row._id];
   }
 
 }

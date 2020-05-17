@@ -13,6 +13,23 @@ export interface MyBasicData {
     friends: string[];
 }
 
+export interface NewTestData {
+    date: string;
+    dateTime: number;
+    isEnabled: boolean;
+}
+
+export interface NewBasicData {
+    testArray: number[];
+    testData: NewTestData;
+    testDate: string;
+    testDateTime: number;
+    testDouble: number;
+    testEnabled: boolean;
+    testIP: string;
+    testText: string;
+}
+
 export class DataGenerator {
     constructor() {}
 
@@ -50,5 +67,31 @@ export class DataGenerator {
 
     createRandomNumber(): number {
         return Faker.random.number(100);
+    }
+
+    createNewBasicData(): NewBasicData {
+        const numCount = Faker.random.number(10);
+        const myNumbers: number[] = [];
+        for(let j = 0; j < numCount; j++) {
+            myNumbers.push(this.createRandomNumber());
+        }
+        return {
+            testArray: [...myNumbers],
+            testData: this.createNewTestData(),
+            testDate: Faker.date.recent().toISOString(),
+            testDateTime: Faker.date.recent().getTime(),
+            testDouble: Faker.random.number({precision: 10}),
+            testEnabled: Faker.random.boolean(),
+            testIP: Faker.internet.ip(),
+            testText: Faker.random.words(3)
+        };
+    }
+
+    createNewTestData(): NewTestData {
+        return {
+            date: Faker.date.recent().toISOString(),
+            dateTime: Faker.date.recent().getTime(),
+            isEnabled: Faker.random.boolean()
+        };
     }
 }

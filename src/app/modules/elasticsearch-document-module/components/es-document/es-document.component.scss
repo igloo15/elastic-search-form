@@ -13,6 +13,15 @@
     align-content: stretch;
 }
 
+.form-spinner {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+}
+
 es-field-wrapper {
     padding-bottom: 8px;
 }

@@ -3,7 +3,8 @@
   "dest": "../../../../dist/document-lib",
   "whitelistedNonPeerDependencies": [
     "tslib",
-    "@igloo15/elasticsearch-angular-service"
+    "@igloo15/elasticsearch-angular-service",
+    "@angular-material-components/datetime-picker"
   ],
   "lib": {
     "entryFile": "public-api.ts",

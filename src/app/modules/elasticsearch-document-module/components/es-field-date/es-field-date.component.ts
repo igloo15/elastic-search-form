@@ -14,4 +14,16 @@ export class EsFieldDateComponent extends EsComponentBase implements OnInit {
   ngOnInit(): void {
   }
 
+  onDataSet() {
+    if (this.data.config && !this.data.config.valueParser && !this.data.config.valueSaver) {
+      this.data.config.valueParser = (data: ESFieldData) => new Date(data.model.value);
+      this.data.config.valueSaver = (data: Date) => {
+        if (this.data.model.type === 'date_nanos') {
+          return data.getTime();
+        }
+        return data.toISOString();
+      }
+    }
+  }
+
 }
