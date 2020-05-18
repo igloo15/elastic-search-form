@@ -1,0 +1,11 @@
+.col-field {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-items: flex-start;
+}
+
+mat-label {
+    padding-right: 10px;
+    box-sizing: border-box;
+}

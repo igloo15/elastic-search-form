@@ -1,1 +1,4 @@
-<mat-slide-toggle [style]="getStyle()" [checked]="getValue()" (change)="onToggleChange($event)" [disabled]="data.config.disable">{{data.config.title}}</mat-slide-toggle>
+<div class="col-field">
+    <mat-label class="label-before-slide">{{getTitle()}}</mat-label>
+    <mat-slide-toggle [style]="getStyle()" [checked]="getValue()" (change)="onToggleChange($event)" [disabled]="data.config.disable"></mat-slide-toggle>
+</div>

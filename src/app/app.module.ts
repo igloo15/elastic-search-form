@@ -11,7 +11,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { AppComponent } from './app.component';
 import { ElasticSearchServiceModule } from '@igloo15/elasticsearch-angular-service';
 import { ElasticSearchTableModule, tableRoutes, TableConfig } from './modules/elasticsearch-table-module/public-api';
-import { ElasticSearchDocumentModule } from './modules/elasticsearch-document-module/public-api';
+import { ElasticSearchDocumentModule, ESDocumentBuilder } from './modules/elasticsearch-document-module/public-api';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
 @NgModule({
@@ -28,8 +28,8 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
     HttpClientModule,
     DragDropModule,
     ElasticSearchServiceModule,
-    ElasticSearchTableModule.forRoot(new TableConfig('test')),
-    ElasticSearchDocumentModule,
+    ElasticSearchTableModule.forRoot(),
+    ElasticSearchDocumentModule.forRoot(),
     NgxJsonViewerModule
   ],
   providers: [],

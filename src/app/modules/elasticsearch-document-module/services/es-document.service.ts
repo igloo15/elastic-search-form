@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { ModelRoot, ModelProp, ModelTypes } from '../models/model-data';
 import { ESMapping, ESSubProperty } from '@igloo15/elasticsearch-angular-service';
 import { ESFieldConfig, ESCustomFieldConfig } from '../models/field-data';
 import { DocumentUtility } from '../document-utility';
 import { TemplateFactoryService } from './template-factory.service';
 import { ESFieldItemConfig, ESDocumentRowConfig, ESDocumentConfig } from '../models/document-config';
+import { EsDocumentConfigService } from '../elasticsearch-document-token.config';
 
 
 export interface Row {
@@ -17,27 +18,32 @@ export interface Row {
 })
 export class EsDocumentService {
 
-  constructor(private templateFactory: TemplateFactoryService) { }
+  constructor(private templateFactory: TemplateFactoryService, @Inject(EsDocumentConfigService) private configService: ESDocumentConfig) { }
+
+  getDefaultConfig() {
+    return this.configService;
+  }
 
   getConfig(prop: ModelProp, itemConfig: ESFieldItemConfig): ESFieldConfig {
     const type = this.convertToTemplateType(prop, itemConfig);
     if (type) {
-      const template = this.templateFactory.getTemplate(type).template;
+      itemConfig.type = type;
+      const templateDef = this.templateFactory.getTemplate(type);
+      if (!templateDef) {
+        return null;
+      }
       const configItem: ESFieldConfig = {
         data: {
           config: itemConfig,
-          type,
           model: prop
         },
-        template
+        template: templateDef.template
       };
 
       return configItem;
     }
     return null;
   }
-
-  
 
   getProp(keys: string[], index: number, model: ModelRoot | ModelProp) {
     if (model.properties) {
@@ -211,19 +217,18 @@ export class EsDocumentService {
   parseWithConfig(model: ModelRoot, config: ESDocumentConfig): Row[] {
     const newRows: Row[] = [];
     for(const row of config.fields) {
-      const newRow: Row = {
-        config: row,
-        items: []
-      };
+      const fieldConfigs: ESFieldConfig[] = [];
       row.columns.forEach(value => {
         if(config.disable) {
           value.disable = config.disable;
         }
         const prop = this.getProp(value.key.split('.'), 0, model);
         const result = this.getConfig(prop, value);
-        newRow.items.push(result);
+        if (result) {
+          fieldConfigs.push(result);
+        }
       });
-      newRows.push(newRow);
+      newRows.push(this.createRow(fieldConfigs, row));
     }
     return newRows;
   }
@@ -231,28 +236,40 @@ export class EsDocumentService {
   parseWithoutConfig(model: ModelRoot, config: ESDocumentConfig): Row[] {
     const newRows: Row[] = [];
     for(const prop of model.properties) {
-      const formConfig = this.getConfig(prop,
-        {
-          key:'',
-          type: '',
-          title: DocumentUtility.capitalize(prop.key),
-          disable: config.disable,
-          style: {
-            stretch: true
-          }
-        });
-      newRows.push({
-        config: {
-          columns:[],
-          style: {
-            stretch: true
-          }
-        },
-        items: [
-          formConfig
-        ]
-      });
+      const formConfig = this.getConfig(prop, this.createEmptyEsFieldItemConfig(prop, config));
+      if (formConfig) {
+        newRows.push(this.createRow([formConfig]));
+      }
     }
     return newRows;
+  }
+
+  createRow(formConfig: ESFieldConfig[], row?: ESDocumentRowConfig): Row {
+    if (!row) {
+      row = {
+        columns:[],
+        style: {
+          stretch: true
+        }
+      };
+    }
+    return {
+      config: row,
+      items: [
+        ...formConfig
+      ]
+    }
+  }
+
+  createEmptyEsFieldItemConfig(prop: ModelProp, config: ESDocumentConfig) {
+    return {
+      key:'',
+      type: '',
+      title: DocumentUtility.capitalize(prop.key),
+      disable: config.disable,
+      style: {
+        stretch: true
+      }
+    };
   }
 }

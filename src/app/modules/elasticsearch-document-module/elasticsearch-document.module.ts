@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { Routes, Router } from '@angular/router';
 import { EsDocumentComponent } from './components/es-document/es-document.component';
@@ -22,6 +22,8 @@ import { EsFieldDateComponent } from './components/es-field-date/es-field-date.c
 import { MatCardModule } from '@angular/material/card';
 import { MatNativeDateModule } from '@angular/material/core';
 import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
+import { ESDocumentConfig, ESDocumentBuilder } from './models/document-config';
+import { EsDocumentConfigService } from './elasticsearch-document-token.config';
 
 export const documentRoutes: Routes = [
     { path: 'document/:index/view/:id', component: EsDocumentComponent},
@@ -55,5 +57,18 @@ export const documentRoutes: Routes = [
 export class ElasticSearchDocumentModule {
     constructor(router: Router) {
         router.config.push(...documentRoutes);
+    }
+
+    static forRoot(config?: ESDocumentConfig): ModuleWithProviders {
+        config = config ?? new ESDocumentBuilder().build();
+        return {
+            ngModule: ElasticSearchDocumentModule,
+            providers: [
+                {
+                    provide: EsDocumentConfigService,
+                    useValue: config
+                }
+            ]
+        };
     }
 }

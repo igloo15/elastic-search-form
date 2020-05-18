@@ -1,7 +1,5 @@
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { Component, OnInit } from '@angular/core';
-import { ESField, ESFieldData } from '../../models/field-data';
-import { DocumentUtility } from '../../document-utility';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { EsComponentBase } from '../../models/es-component-base';
 

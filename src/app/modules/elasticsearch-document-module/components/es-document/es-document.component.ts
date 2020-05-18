@@ -50,12 +50,14 @@ export class EsDocumentComponent implements OnInit {
 
   constructor(public esService: ElasticConnectionService, private route: ActivatedRoute,
     private documentService: EsDocumentService, private router: Router) {
-    this.config = new ESDocumentBuilder('', '', 'My Form').build();
-    this.config.style.stretch = true;
-    this.config.redirectToTable = true;
   }
 
   ngOnInit(): void {
+    if (!this.config) {
+      this.config = this.documentService.getDefaultConfig();
+      this.config.style.stretch = true;
+      this.config.redirectToTable = true;
+    }
     this.route.url.subscribe(segments => {
       if (segments.length > 3) {
         this.config.disable = segments[2].path === 'view';
@@ -84,7 +86,6 @@ export class EsDocumentComponent implements OnInit {
       const result = await this.esService.getById<any>(this.index, this.id);
       if (result && mapping) {
         this.model = this.documentService.parseModel(result, mapping);
-        console.log(this.model);
         this.title = DocumentUtility.getTitle(this._config.title, this.model.value);
         this.updateFormConfig();
         this.isLoading = false;

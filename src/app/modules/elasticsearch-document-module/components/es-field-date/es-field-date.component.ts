@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ESField, ESFieldData } from '../../models/field-data';
+import { ESFieldData } from '../../models/field-data';
 import { EsComponentBase } from '../../models/es-component-base';
 
 @Component({
@@ -15,9 +15,9 @@ export class EsFieldDateComponent extends EsComponentBase implements OnInit {
   }
 
   onDataSet() {
-    if (this.data.config && !this.data.config.valueParser && !this.data.config.valueSaver) {
-      this.data.config.valueParser = (data: ESFieldData) => new Date(data.model.value);
-      this.data.config.valueSaver = (data: Date) => {
+    if (this.data.config && !this.data.config.valueToDisplay && !this.data.config.valueFromDisplay) {
+      this.data.config.valueToDisplay = (data: ESFieldData) => new Date(data.model.value);
+      this.data.config.valueFromDisplay = (data: Date) => {
         if (this.data.model.type === 'date_nanos') {
           return data.getTime();
         }

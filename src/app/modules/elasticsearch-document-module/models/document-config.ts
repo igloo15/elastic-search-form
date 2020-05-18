@@ -12,12 +12,12 @@ export interface ESDocumentStyleConfig {
 
 export interface ESFieldItemConfig {
     key: string;
-    style: ESDocumentStyleConfig;
+    style?: ESDocumentStyleConfig;
     type?: string;
     title?: TitleType;
     disable?: boolean;
-    valueParser?: (data: ESFieldData) => any;
-    valueSaver?: (data: any) => any;
+    valueToDisplay?: (data: ESFieldData) => any;
+    valueFromDisplay?: (data: any) => any;
 }
 
 export interface ESDocumentRowConfig {
@@ -53,7 +53,7 @@ export class ESDocumentRowBuilder {
         return this;
     }
 
-    build() {
+    build(): ESDocumentRowConfig {
         return this.data;
     }
 }

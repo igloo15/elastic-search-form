@@ -1,5 +1,5 @@
-import { Component, OnInit, ComponentFactory, ComponentFactoryResolver, Input, ViewChild } from '@angular/core';
-import { ESFieldConfig, ESField } from '../../models/field-data';
+import { Component, OnInit, ComponentFactoryResolver, Input, ViewChild } from '@angular/core';
+import { ESFieldConfig, ESFieldComponent } from '../../models/field-data';
 import { EsFieldHostDirective } from '../es-field-host.directive';
 
 @Component({
@@ -19,11 +19,11 @@ export class EsFieldWrapperComponent implements OnInit {
     if(this.config) {
       const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.config.template);
       const componentRef = this.esHost.viewContainerRef.createComponent(componentFactory);
-      const tempField = componentRef.instance as ESField;
+      const tempField = componentRef.instance as ESFieldComponent;
       if (tempField) {
         tempField.data = this.config.data;
       } else {
-        console.error(`Component ${this.config.data.type} does not exist`);
+        console.error(`Component ${this.config.data.config.type} does not exist`);
       }
     }
   }

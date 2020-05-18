@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ESField, ESFieldData } from '../../models/field-data';
-import { DocumentUtility } from '../../document-utility';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { EsComponentBase } from '../../models/es-component-base';
 

@@ -7,13 +7,12 @@ export interface ESFieldConfig {
     template: Type<any>;
 }
 
-export interface ESField {
+export interface ESFieldComponent {
     data: ESFieldData;
 }
 
 export interface ESFieldData {
-    type: string;
-    config?: ESFieldItemConfig;
+    config: ESFieldItemConfig;
     model: ModelProp;
 }
 

@@ -1,7 +1,7 @@
-import { ESField, ESFieldData } from './field-data';
+import { ESFieldComponent, ESFieldData } from './field-data';
 import { DocumentUtility } from '../document-utility';
 
-export abstract class EsComponentBase implements ESField {
+export abstract class EsComponentBase implements ESFieldComponent {
     _data: ESFieldData;
 
     get data(): ESFieldData {
@@ -15,20 +15,24 @@ export abstract class EsComponentBase implements ESField {
 
     onDataSet() { }
 
+    getTitle() {
+        return DocumentUtility.getTitle(this._data.config.title, this.data.model.value);
+    }
+
     getStyle() {
         return DocumentUtility.getStyle(this.data.config.style);
     }
 
     getValue() {
-        if (this._data.config?.valueParser) {
-            return this._data.config.valueParser(this._data);
+        if (this._data.config?.valueToDisplay) {
+            return this._data.config.valueToDisplay(this._data);
         }
         return this.data.model.value;
     }
 
     setValue(value: any) {
-        if (this._data.config?.valueSaver) {
-            this.data.model.value = this._data.config.valueSaver(value);
+        if (this._data.config?.valueFromDisplay) {
+            this.data.model.value = this._data.config.valueFromDisplay(value);
         } else {
             this.data.model.value = value;
         }

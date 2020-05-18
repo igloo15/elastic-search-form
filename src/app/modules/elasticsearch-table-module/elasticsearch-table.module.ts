@@ -51,7 +51,8 @@ export class ElasticSearchTableModule {
     constructor(router: Router) {
         router.config.push(...tableRoutes);
     }
-    static forRoot(config: TableConfig): ModuleWithProviders {
+    static forRoot(config?: TableConfig): ModuleWithProviders {
+        config = config ?? new TableConfig('');
         return {
             ngModule: ElasticSearchTableModule,
             providers: [

@@ -45,7 +45,7 @@ export class TemplateFactoryService {
     if (template) {
       return template;
     } else {
-      return { type: 'input', template: EsFieldInputComponent };
+      return null;
     }
   }
 
