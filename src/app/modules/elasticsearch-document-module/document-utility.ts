@@ -20,12 +20,16 @@ export class DocumentUtility {
         return s.charAt(0).toUpperCase() + s.slice(1)
     }
 
-    static getTitle(title: TitleType, model: any): string {
+    static getTitle(title: TitleType, model: any, key: string): string {
         if (typeof title === 'string') return title;
+        if (!title) return this.capitalize(key);
         return title(model);
     }
 
     static getStyle(config: ESDocumentStyleConfig): string {
+        if (!config) {
+            return '';
+        }
         let width = 'width:""';
         let height = 'height:""';
         if (config.width) {
@@ -38,7 +42,10 @@ export class DocumentUtility {
             width = `width:100%`;
             height = `height:100%`;
         }
+        if (!config.extraStyle) {
+            config.extraStyle = '';
+        }
 
-        return `${width};${height};box-sizing:border-box;`;
+        return `${width};${height};box-sizing:border-box;${config.extraStyle}`;
     }
 }

@@ -11,8 +11,31 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { AppComponent } from './app.component';
 import { ElasticSearchServiceModule } from '@igloo15/elasticsearch-angular-service';
 import { ElasticSearchTableModule, tableRoutes, TableConfig } from './modules/elasticsearch-table-module/public-api';
-import { ElasticSearchDocumentModule, ESDocumentBuilder } from './modules/elasticsearch-document-module/public-api';
+import { ElasticSearchDocumentModule, ESDocumentBuilder, ESDocumentConfig } from './modules/elasticsearch-document-module/public-api';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
+
+const documentConfig: ESDocumentConfig = new ESDocumentBuilder('', '', 'My Amazing Form')
+.addRow('Row One')
+.addStyle({stretch: true})
+.addItem({ key: 'testData.isEnabled', type: 'toggle', style: { width:'500px' }})
+.addItem({ key: 'testData.date', type: 'datepicker', title: 'My Date'})
+.done()
+.addRow('Row Two')
+.addItem({ key: 'testDouble', numOptions: [4, 13.4, 13, 1341.3, 85740], valueFromDisplay: (data) => {
+  let sum = 1;
+  for(const item of data) {
+    sum = sum * item;
+  }
+  return sum;
+}, valueToDisplay: (data) => [data.model.value],multiSelect: true, type:'select'})
+.addItem({ key: 'testDouble', min: 0, max: 100000, interval: 4.73, verticalSlider: false, sliderTooltip:true, type:'slider', title: 'My Other Value'})
+.addItem({ key: 'testDouble', type:'number', title: 'My Actual Value', min: 0, max: 90000})
+.done()
+.addRow((data) => data.testText)
+.addStyle({stretch: true})
+.addItem({key: 'testText', type:'input', title: 'My Short Title', stringLimit: 100, showTextArea: true, style:{stretch: true}})
+.done()
+.build();
 
 @NgModule({
   declarations: [

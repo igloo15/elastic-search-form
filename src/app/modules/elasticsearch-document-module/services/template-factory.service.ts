@@ -5,6 +5,8 @@ import { EsFieldToggleComponent } from '../components/es-field-toggle/es-field-t
 import { EsFieldChipsComponent } from '../components/es-field-chips/es-field-chips.component';
 import { EsFieldNumberInputComponent } from '../components/es-field-number-input/es-field-number-input.component';
 import { EsFieldDateComponent } from '../components/es-field-date/es-field-date.component';
+import { EsFieldSelectComponent } from '../components/es-field-select/es-field-select.component';
+import { EsFieldSliderComponent } from '../components/es-field-slider/es-field-slider.component';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +35,14 @@ export class TemplateFactoryService {
     this.addTemplate({
       type: 'datepicker',
       template: EsFieldDateComponent
+    });
+    this.addTemplate({
+      type: 'select',
+      template: EsFieldSelectComponent
+    });
+    this.addTemplate({
+      type: 'slider',
+      template: EsFieldSliderComponent
     });
   }
 

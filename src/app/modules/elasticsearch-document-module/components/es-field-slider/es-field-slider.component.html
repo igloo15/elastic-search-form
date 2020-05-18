@@ -1,0 +1,12 @@
+<mat-label>{{getTitle()}}</mat-label>
+<mat-slider 
+    [min]="data.config.min" 
+    [max]="data.config.max" 
+    [step]="getInterval()" 
+    [value]="getValue()" 
+    [disabled]="data.config.disable"
+    [vertical]="data.config.verticalSlider"
+    [invert]="data.config.invertedSlider"
+    [thumbLabel]="data.config.sliderTooltip"
+    
+    (change)="setValue($event.value)"></mat-slider>

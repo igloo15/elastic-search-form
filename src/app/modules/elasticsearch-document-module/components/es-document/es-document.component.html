@@ -4,10 +4,13 @@
     </mat-card-header>
     <mat-card-content class="form-container">
         <ng-container *ngIf="!isLoading">
-            <div *ngFor="let row of rows" [style]="getStyle(row.config.style)" class="form-row">
-                <ng-container *ngFor="let item of row.items">
-                    <es-field-wrapper [config]="item" [style]="getStyle(item.data.config.style)"></es-field-wrapper>
-                </ng-container>
+            <div *ngFor="let row of rows" [style]="getStyle(row.config.style)" class="form-row-wrapper">
+                <h3 *ngIf="row.config.title">{{getTitle(row.config.title)}}</h3>
+                <div class="form-row">
+                    <ng-container *ngFor="let item of row.items">
+                        <es-field-wrapper [config]="item" [style]="getStyle(item.data.config.style)"></es-field-wrapper>
+                    </ng-container>
+                </div>
             </div>
         </ng-container>
         <div *ngIf="isLoading" class="form-spinner">

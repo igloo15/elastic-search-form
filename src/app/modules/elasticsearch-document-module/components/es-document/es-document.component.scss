@@ -6,11 +6,17 @@
     align-items: flex-start;
 }
 
+.form-row-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-content: stretch;
+}
+
 .form-row {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    align-content: stretch;
+    align-items: center;
 }
 
 .form-spinner {

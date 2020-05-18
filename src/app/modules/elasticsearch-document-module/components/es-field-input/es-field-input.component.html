@@ -1,4 +1,15 @@
 <mat-form-field [style]="getStyle()">
     <mat-label>{{getTitle()}}</mat-label>
-    <input matInput [value]="getValue()" [disabled]="data.config.disable" (keyup)="onChange($event)">
+    <input matInput *ngIf="!data.config.showTextArea" [value]="getValue()" [disabled]="data.config.disable" (keyup)="onTextChange($event)">
+    <textarea matInput *ngIf="data.config.showTextArea" 
+        [value]="getValue()" 
+        [disabled]="data.config.disable" 
+        [mat-autosize]="true"
+        [matAutosizeMinRows]="data.config.textAreaMinRows"
+        [matAutosizeMaxRows]="data.config.textAreaMaxRows"
+        (keyup)="onTextChange($event)"></textarea>
+    <button mat-button *ngIf="getValue() && data.config.showClearTextButton" matSuffix mat-icon-button aria-label="Clear" (click)="setValue('')">
+        <mat-icon>close</mat-icon>
+    </button>
+    <mat-hint align="end" *ngIf="data.config.stringLimit > 0">{{getValue().length}} / {{data.config.stringLimit}}</mat-hint>
 </mat-form-field>

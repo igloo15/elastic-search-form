@@ -8,6 +8,7 @@ export interface ESDocumentStyleConfig {
     stretch?: boolean;
     width?: string;
     height?: string;
+    extraStyle?: string;
 }
 
 export interface ESFieldItemConfig {
@@ -16,6 +17,22 @@ export interface ESFieldItemConfig {
     type?: string;
     title?: TitleType;
     disable?: boolean;
+    min?: number;
+    max?: number;
+    interval?: number;
+    verticalSlider?: boolean;
+    invertedSlider?: boolean;
+    sliderTooltip?: boolean;
+    numOptions?: number[];
+    stringOptions?: number[];
+    multiSelect?: boolean;
+    showTextArea?: boolean;
+    textAreaMinRows?: number;
+    textAreaMaxRows?: number;
+    textAreaAutoSize?: boolean;
+    enableStringLimit?: boolean;
+    stringLimit?: number;
+    showClearTextButton?: boolean;
     valueToDisplay?: (data: ESFieldData) => any;
     valueFromDisplay?: (data: any) => any;
 }
@@ -39,18 +56,29 @@ export interface ESDocumentConfig {
 
 export class ESDocumentRowBuilder {
     data: ESDocumentRowConfig;
+    parent: ESDocumentBuilder;
 
-    constructor(title: TitleType) {
+    constructor(title: TitleType, parentBuilder: ESDocumentBuilder) {
         this.data = {
             title,
             columns: [],
             style: {}
         }
+        this.parent = parentBuilder;
+    }
+
+    addStyle(style: ESDocumentStyleConfig): ESDocumentRowBuilder {
+        this.data.style = {...this.data.style, ...style};
+        return this;
     }
 
     addItem(item: ESFieldItemConfig): ESDocumentRowBuilder {
         this.data.columns.push(item);
         return this;
+    }
+
+    done(): ESDocumentBuilder {
+        return this.parent;
     }
 
     build(): ESDocumentRowConfig {
@@ -81,6 +109,11 @@ export class ESDocumentBuilder {
         return this.data;
     }
 
+    addStyle(style: ESDocumentStyleConfig): ESDocumentBuilder {
+        this.data.style = {...this.data.style, ...style};
+        return this;
+    }
+
     addRow(title: TitleType): ESDocumentRowBuilder {
         const row = this.createRow(title);
         this.rowBuilders.push(row);
@@ -88,7 +121,7 @@ export class ESDocumentBuilder {
     }
 
     private createRow(title: TitleType): ESDocumentRowBuilder {
-        return new ESDocumentRowBuilder(title);
+        return new ESDocumentRowBuilder(title, this);
     }
 }
 

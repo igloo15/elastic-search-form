@@ -13,7 +13,11 @@ export class EsFieldInputComponent extends EsComponentBase implements OnInit {
   ngOnInit(): void {
   }
 
-  onChange(event: any) {
+  onTextChange(event: any) {
+    if (this.data.config.stringLimit > 0 && event.target.value.length > this.data.config.stringLimit) {
+      event.target.value = this.getValue();
+      return;
+    }
     this.setValue(event.target.value);
   }
 }

@@ -50,7 +50,7 @@ export class EsDocumentService {
       for(const prop of model.properties) {
         if (prop.key === keys[index]) {
           index++;
-          if (keys.length >= index) {
+          if (index >= keys.length) {
             return prop;
           } else {
             return this.getProp(keys, index, prop);

@@ -1,0 +1,20 @@
+<mat-form-field>
+    <mat-label>{{getTitle()}}</mat-label>
+    <mat-select *ngIf="data.config.numOptions" 
+      [value]="getValue()" 
+      [disabled]="data.config.disable" 
+      [multiple]="data.config.multiSelect" 
+      (selectionChange)="setValue($event.value)">
+      <mat-option *ngFor="let numOption of data.config.numOptions" [value]="numOption">
+        {{numOption}}
+      </mat-option>
+    </mat-select>
+    <mat-select *ngIf="data.config.stringOptions" 
+      [value]="getValue()" 
+      [disabled]="data.config.disable" 
+      (selectionChange)="setValue($event.value)">
+      <mat-option *ngFor="let stringOption of data.config.stringOptions" [value]="stringOption">
+        {{stringOption}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>

@@ -16,7 +16,7 @@ export abstract class EsComponentBase implements ESFieldComponent {
     onDataSet() { }
 
     getTitle() {
-        return DocumentUtility.getTitle(this._data.config.title, this.data.model.value);
+        return DocumentUtility.getTitle(this.data.config.title, this.data?.model?.value, this.data.model.key);
     }
 
     getStyle() {

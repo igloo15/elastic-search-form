@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ElasticConnectionService } from '@igloo15/elasticsearch-angular-service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ESDocumentConfig, ESDocumentBuilder, ESDocumentStyleConfig } from '../../models/document-config';
+import { ESDocumentConfig, ESDocumentBuilder, ESDocumentStyleConfig, TitleType } from '../../models/document-config';
 import { DocumentUtility } from '../../document-utility';
 import { EsDocumentService, Row } from '../../services/es-document.service';
 import { ModelRoot } from '../../models/model-data';
@@ -86,7 +86,7 @@ export class EsDocumentComponent implements OnInit {
       const result = await this.esService.getById<any>(this.index, this.id);
       if (result && mapping) {
         this.model = this.documentService.parseModel(result, mapping);
-        this.title = DocumentUtility.getTitle(this._config.title, this.model.value);
+        this.title = DocumentUtility.getTitle(this._config.title, this.model.value, '');
         this.updateFormConfig();
         this.isLoading = false;
       }
@@ -103,6 +103,10 @@ export class EsDocumentComponent implements OnInit {
 
   getStyle(config: ESDocumentStyleConfig) {
     return DocumentUtility.getStyle(config);
+  }
+
+  getTitle(title: TitleType) {
+    return DocumentUtility.getTitle(title, this.model.value, '');
   }
 
   save() {
