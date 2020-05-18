@@ -1,6 +1,6 @@
 {
   "name": "@igloo15/elasticsearch-document-editor",
-  "version": "0.3.0-dev.2",
+  "version": "0.4.0-dev.11",
   "description": "A game of taking turns",
   "main": "index.js",
   "scripts": {
@@ -25,7 +25,7 @@
     "deploy:service": "npm run build:service:lib && npm pack --dry-run ./dist/service-lib",
     "deploy:table": "npm run build:table:lib && npm pack --dry-run ./dist/table-lib",
     "deploy:document": "npm run build:document:lib && npm pack --dry-run ./dist/document-lib",
-    "publish:lib:all": "npm publish --access=public ./dist/service-lib && npm publish --access=public ./dist/table-lib",
+    "publish:lib:all": "npm publish --access=public ./dist/service-lib && npm publish --access=public ./dist/table-lib && npm publish --access=public ./dist/document-lib",
     "deploy": "npm run build && npm run git:tag && npm run publish:lib:all",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -94,5 +94,5 @@
     "typedoc": "^0.17.6",
     "typescript": "~3.7.5"
   },
-  "date": "Thu Apr 30 2020"
+  "date": "Mon May 18 2020"
 }

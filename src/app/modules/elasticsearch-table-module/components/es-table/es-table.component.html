@@ -45,7 +45,7 @@
         (sort)="onSort($event)"
         class="material">
         <!-- Row Detail Template -->
-        <ngx-datatable-row-detail [rowHeight]="auto" #myDetailRow>
+        <ngx-datatable-row-detail [rowHeight]="'auto'" #myDetailRow>
             <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
                 <ngx-json-viewer [json]="row" [expanded]="false"></ngx-json-viewer>
             </ng-template>
