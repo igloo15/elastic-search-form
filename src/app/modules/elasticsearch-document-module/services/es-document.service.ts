@@ -4,7 +4,7 @@ import { ESMapping, ESSubProperty } from '@igloo15/elasticsearch-angular-service
 import { ESFieldConfig, ESCustomFieldConfig } from '../models/field-data';
 import { DocumentUtility } from '../document-utility';
 import { TemplateFactoryService } from './template-factory.service';
-import { ESFieldItemConfig, ESDocumentRowConfig, ESDocumentConfig } from '../models/document-config';
+import { ESFieldItemConfig, ESDocumentRowConfig, ESDocumentConfig, ESDocumentConfigCollection } from '../models/document-config';
 import { EsDocumentConfigService } from '../elasticsearch-document-token.config';
 
 
@@ -18,10 +18,15 @@ export interface Row {
 })
 export class EsDocumentService {
 
-  constructor(private templateFactory: TemplateFactoryService, @Inject(EsDocumentConfigService) private configService: ESDocumentConfig) { }
+  constructor(private templateFactory: TemplateFactoryService,
+    @Inject(EsDocumentConfigService)private configService: ESDocumentConfigCollection) { }
 
   getDefaultConfig() {
-    return this.configService;
+    return this.configService.default;
+  }
+
+  getIndexConfig(index: string) {
+    return this.configService.indexConfigs.get(index) ?? this.configService.default;
   }
 
   getConfig(prop: ModelProp, itemConfig: ESFieldItemConfig): ESFieldConfig {

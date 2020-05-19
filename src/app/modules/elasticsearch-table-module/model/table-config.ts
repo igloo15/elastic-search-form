@@ -90,6 +90,8 @@ export class TableConfig {
 
     public showSearch = true;
     public showLimitDropDown = true;
+    public showUpArrow = true;
+    public showDownArrow = true;
     public showRefresh = true;
     public showConfigButton = true;
     public scrollbarH = true;

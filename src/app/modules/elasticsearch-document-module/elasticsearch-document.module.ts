@@ -23,7 +23,7 @@ import { EsFieldChipsComponent } from './components/es-field-chips/es-field-chip
 import { EsFieldNumberInputComponent } from './components/es-field-number-input/es-field-number-input.component';
 import { EsFieldDateComponent } from './components/es-field-date/es-field-date.component';
 import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
-import { ESDocumentConfig, ESDocumentBuilder } from './models/document-config';
+import { ESDocumentConfig, ESDocumentBuilder, ESDocumentConfigCollection } from './models/document-config';
 import { EsDocumentConfigService } from './elasticsearch-document-token.config';
 import { EsFieldSelectComponent } from './components/es-field-select/es-field-select.component';
 import { EsFieldSliderComponent } from './components/es-field-slider/es-field-slider.component';
@@ -64,14 +64,23 @@ export class ElasticSearchDocumentModule {
         router.config.push(...documentRoutes);
     }
 
-    static forRoot(config?: ESDocumentConfig): ModuleWithProviders {
+    static forRoot(config?: ESDocumentConfig | ESDocumentConfigCollection): ModuleWithProviders {
+        let configCollection: ESDocumentConfigCollection = { default: null, indexConfigs: new Map<string, ESDocumentConfig>()};
         config = config ?? new ESDocumentBuilder().build();
+        if (config) {
+            const localConfig = config as ESDocumentConfig;
+            if (localConfig) {
+                configCollection.default = localConfig;
+            } else {
+                configCollection = config as ESDocumentConfigCollection;
+            }
+        }
         return {
             ngModule: ElasticSearchDocumentModule,
             providers: [
                 {
                     provide: EsDocumentConfigService,
-                    useValue: config
+                    useValue: configCollection
                 }
             ]
         };

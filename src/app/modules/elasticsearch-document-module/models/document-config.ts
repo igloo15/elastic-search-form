@@ -1,6 +1,10 @@
 import { TemplateRef, Type } from '@angular/core';
 import { ESFieldData } from './field-data';
 
+export interface ESDocumentConfigCollection {
+    default: ESDocumentConfig;
+    indexConfigs: Map<string, ESDocumentConfig>;
+}
 
 export type TitleType = string | ((model: any) => string);
 

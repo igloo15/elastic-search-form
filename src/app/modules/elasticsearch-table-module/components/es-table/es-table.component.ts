@@ -21,6 +21,7 @@ export class EsTableComponent implements OnInit {
   @ViewChild('objTmpl', { static: true }) objTmpl: TemplateRef<any>;
   @ViewChild('expandTmpl', { static: true }) expandTmpl: TemplateRef<any>;
   @ViewChild('linkTmpl', { static: true }) linkTmpl: TemplateRef<any>;
+  @ViewChild('basicTmpl', { static: true }) basicTmpl: TemplateRef<any>;
   @ViewChild('topButton', { static: false }) topButton: ElementRef<HTMLButtonElement>;
   @ViewChild('bottomButton', { static: false }) bottomButton: ElementRef<HTMLButtonElement>;
 
@@ -94,6 +95,10 @@ export class EsTableComponent implements OnInit {
       this.startUp();
     });
 
+  }
+
+  isArray(value: any) {
+    return Array.isArray(value);
   }
 
   scrollUpOrDown($element: any) {
@@ -175,6 +180,8 @@ export class EsTableComponent implements OnInit {
         default:
           if (item.type && this.config.dataConverters[item.type]) {
             newColumn.cellTemplate = this.config.dataConverters[item.type].template;
+          } else {
+            newColumn.cellTemplate = this.basicTmpl;
           }
           break;
       }

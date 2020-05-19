@@ -12,7 +12,7 @@
         </mat-form-field>
         
         <div class="spacer"></div>
-        <button mat-mini-fab color="primary" (click)="scrollUpOrDown(bottomButton)" class="button-margins" *ngIf="config.showRefresh" #topButton>
+        <button mat-mini-fab color="primary" (click)="scrollUpOrDown(bottomButton)" class="button-margins" *ngIf="config.showDownArrow" #topButton>
             <mat-icon>arrow_downward</mat-icon>
         </button>
         <button mat-mini-fab color="primary" (click)="refreshData()" class="button-margins" *ngIf="config.showRefresh">
@@ -52,6 +52,17 @@
         </ngx-datatable-row-detail>
     </ngx-datatable>
 
+    <ng-template #basicTmpl let-row="row" let-value="value">
+        <ng-container *ngIf="isArray(value)">
+            <mat-chip-list>
+                <mat-chip *ngFor="let item of value">{{item}}</mat-chip>
+            </mat-chip-list>
+        </ng-container>
+        <ng-container *ngIf="!isArray(value)">
+            {{value}}
+        </ng-container>
+    </ng-template>
+
     <ng-template #expandTmpl let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
         <span
             href="javascript:void(0)"
@@ -77,7 +88,7 @@
         <button mat-raised-button [routerLink]="documentRoute(row, value, column)" routerLinkActive="router-link-active">{{column.name}}</button>
     </ng-template>
     <div class="bottom-container">
-        <button mat-mini-fab color="primary" (click)="scrollUpOrDown(topButton)" class="button-margins" *ngIf="config.showRefresh" #bottomButton>
+        <button mat-mini-fab color="primary" (click)="scrollUpOrDown(topButton)" class="button-margins" *ngIf="config.showUpArrow" #bottomButton>
             <mat-icon>arrow_upward</mat-icon>
         </button>
     </div>

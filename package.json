@@ -1,6 +1,6 @@
 {
   "name": "@igloo15/elasticsearch-document-editor",
-  "version": "0.4.0-dev.11",
+  "version": "0.4.0-dev.12",
   "description": "A game of taking turns",
   "main": "index.js",
   "scripts": {

@@ -21,6 +21,6 @@
     </mat-card-content>
     <mat-card-actions *ngIf="!isLoading">
         <button style="font-weight: bold;" mat-button (click)="save()">SAVE</button>
-        <button style="font-weight: bold;" mat-button (click)="cancel()">CANCEL</button>
+        <button style="font-weight: bold;" mat-button (click)="cancel()" *ngIf="config.redirect || config.redirectToTable">CANCEL</button>
     </mat-card-actions>
 </mat-card>

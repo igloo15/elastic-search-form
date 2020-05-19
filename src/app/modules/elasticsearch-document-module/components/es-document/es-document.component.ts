@@ -64,8 +64,12 @@ export class EsDocumentComponent implements OnInit {
       }
     });
     this.route.paramMap.subscribe(params => {
-      if(params.get('index')) {
-        this.index = params.get('index');
+      const indexName = params.get('index');
+      if(indexName) {
+        if (this.config.index !== indexName) {
+          this.config = this.documentService.getIndexConfig(indexName);
+        }
+        this.index = indexName;
       }
       if (params.get('id')) {
         this.id = params.get('id');
