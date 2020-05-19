@@ -65,22 +65,17 @@ export class ElasticSearchDocumentModule {
     }
 
     static forRoot(config?: ESDocumentConfig | ESDocumentConfigCollection): ModuleWithProviders {
-        let configCollection: ESDocumentConfigCollection = { default: null, indexConfigs: new Map<string, ESDocumentConfig>()};
         config = config ?? new ESDocumentBuilder().build();
-        if (config) {
-            const localConfig = config as ESDocumentConfig;
-            if (localConfig) {
-                configCollection.default = localConfig;
-            } else {
-                configCollection = config as ESDocumentConfigCollection;
-            }
+        let localConfigCollection = config as ESDocumentConfigCollection;
+        if (!localConfigCollection.indexConfigs) {
+            localConfigCollection = { default: config as ESDocumentConfig, indexConfigs: new Map<string, ESDocumentConfig>() };
         }
         return {
             ngModule: ElasticSearchDocumentModule,
             providers: [
                 {
                     provide: EsDocumentConfigService,
-                    useValue: configCollection
+                    useValue: localConfigCollection
                 }
             ]
         };

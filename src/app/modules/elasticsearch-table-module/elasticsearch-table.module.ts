@@ -14,7 +14,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { TableConfigDialogComponent } from './components/table-config-dialog/table-config-dialog.component';
-import { TableConfig } from './model/table-config';
+import { TableConfig, TableConfigCollection } from './model/table-config';
 import { EsTableConfigService } from './elasticsearch-table.config';
 
 export const tableRoutes: Routes = [
@@ -51,14 +51,18 @@ export class ElasticSearchTableModule {
     constructor(router: Router) {
         router.config.push(...tableRoutes);
     }
-    static forRoot(config?: TableConfig): ModuleWithProviders {
+    static forRoot(config?: TableConfig | TableConfigCollection): ModuleWithProviders {
         config = config ?? new TableConfig('');
+        let configCollection = config as TableConfigCollection;
+        if (!configCollection.indexConfigs) {
+            configCollection = { default: config as TableConfig, indexConfigs: new Map<string, TableConfig>() };
+        }
         return {
             ngModule: ElasticSearchTableModule,
             providers: [
                 {
                     provide: EsTableConfigService,
-                    useValue: config
+                    useValue: configCollection
                 }
             ]
         };

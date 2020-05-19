@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, TemplateRef } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { TableConfig, ColumnConfig } from '../../model/table-config';
+import { TableConfig, ColumnConfig, ColumnCollection } from '../../model/table-config';
 import { ComponentType } from '@angular/cdk/portal';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
@@ -10,8 +10,13 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
   styleUrls: ['./table-config-dialog.component.scss']
 })
 export class TableConfigDialogComponent implements OnInit {
+  config: TableConfig;
+  columnConfig: ColumnCollection;
 
-  constructor(public dialogRef: MatDialogRef<TableConfigDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: TableConfig) { }
+  constructor(public dialogRef: MatDialogRef<TableConfigDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    this.config = data.config;
+    this.columnConfig = data.columnConfig;
+  }
 
   ngOnInit(): void {
   }
@@ -34,18 +39,26 @@ export class TableConfigDialogComponent implements OnInit {
   }
 
   onSearchChange(ob: MatSlideToggleChange) {
-    this.data.showSearch = ob.checked;
+    this.config.showSearch = ob.checked;
   }
 
   onRefreshChange(ob: MatSlideToggleChange) {
-    this.data.showRefresh = ob.checked;
+    this.config.showRefresh = ob.checked;
   }
 
   onDropDownChange(ob: MatSlideToggleChange) {
-    this.data.showLimitDropDown = ob.checked;
+    this.config.showLimitDropDown = ob.checked;
+  }
+
+  onUpArrowChange(ob: MatSlideToggleChange) {
+    this.config.showUpArrow = ob.checked;
+  }
+
+  onDownArrowChange(ob: MatSlideToggleChange) {
+    this.config.showDownArrow = ob.checked;
   }
 
   onColumnHideChange(col: string) {
-    this.data.toggleColumn(col);
+    this.config.toggleColumn(col);
   }
 }

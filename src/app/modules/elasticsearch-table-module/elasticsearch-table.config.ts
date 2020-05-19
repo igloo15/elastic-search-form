@@ -1,4 +1,4 @@
 import { InjectionToken } from '@angular/core';
-import { TableConfig } from './model/table-config';
+import { TableConfigCollection } from './model/table-config';
 
-export const EsTableConfigService = new InjectionToken<TableConfig>('TableConfig');
+export const EsTableConfigService = new InjectionToken<TableConfigCollection>('TableConfigCollection');

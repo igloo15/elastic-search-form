@@ -1,10 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { ElasticConnectionService } from '@igloo15/elasticsearch-angular-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ESDocumentConfig, ESDocumentBuilder, ESDocumentStyleConfig, TitleType } from '../../models/document-config';
 import { DocumentUtility } from '../../document-utility';
 import { EsDocumentService, Row } from '../../services/es-document.service';
 import { ModelRoot } from '../../models/model-data';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -12,7 +13,7 @@ import { ModelRoot } from '../../models/model-data';
   templateUrl: './es-document.component.html',
   styleUrls: ['./es-document.component.scss']
 })
-export class EsDocumentComponent implements OnInit {
+export class EsDocumentComponent implements OnInit, OnDestroy {
 
   public model: ModelRoot;
   public isLoading = true;
@@ -48,6 +49,10 @@ export class EsDocumentComponent implements OnInit {
   public title = '';
   public rows: Row[] = [];
 
+  private _myConnSub: Subscription;
+  private _myParamSub: Subscription;
+  private _myUrlSub: Subscription;
+
   constructor(public esService: ElasticConnectionService, private route: ActivatedRoute,
     private documentService: EsDocumentService, private router: Router) {
   }
@@ -58,12 +63,12 @@ export class EsDocumentComponent implements OnInit {
       this.config.style.stretch = true;
       this.config.redirectToTable = true;
     }
-    this.route.url.subscribe(segments => {
+    this._myUrlSub = this.route.url.subscribe(segments => {
       if (segments.length > 3) {
         this.config.disable = segments[2].path === 'view';
       }
     });
-    this.route.paramMap.subscribe(params => {
+    this._myParamSub = this.route.paramMap.subscribe(params => {
       const indexName = params.get('index');
       if(indexName) {
         if (this.config.index !== indexName) {
@@ -76,7 +81,7 @@ export class EsDocumentComponent implements OnInit {
       }
       this.queryES();
     });
-    this.esService.isStarted.subscribe(async result => {
+    this._myConnSub = this.esService.isStarted.subscribe(async result => {
       if(result) {
         await this.queryES();
       }
@@ -133,5 +138,11 @@ export class EsDocumentComponent implements OnInit {
       this.router.navigate(['table', this.config.index]);
       return;
     }
+  }
+
+  ngOnDestroy() {
+    this._myConnSub?.unsubscribe();
+    this._myParamSub?.unsubscribe();
+    this._myUrlSub?.unsubscribe();
   }
 }

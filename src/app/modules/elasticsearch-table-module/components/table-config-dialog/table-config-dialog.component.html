@@ -1,16 +1,18 @@
 <h1 mat-dialog-title>Table Configuration</h1>
 <div mat-dialog-content class="config-table">
     <div class="table-settings">
-        <mat-slide-toggle [checked]="data.showSearch" (change)="onSearchChange($event)">Show Search Box</mat-slide-toggle>
-        <mat-slide-toggle [checked]="data.showLimitDropDown" (change)="onDropDownChange($event)">Show Limit Drop Down</mat-slide-toggle>
-        <mat-slide-toggle [checked]="data.showRefresh" (change)="onRefreshChange($event)">Show Refresh Button</mat-slide-toggle>
+        <mat-slide-toggle [checked]="config.showSearch" (change)="onSearchChange($event)">Show Search Box</mat-slide-toggle>
+        <mat-slide-toggle [checked]="config.showLimitDropDown" (change)="onDropDownChange($event)">Show Limit Drop Down</mat-slide-toggle>
+        <mat-slide-toggle [checked]="config.showRefresh" (change)="onRefreshChange($event)">Show Refresh Button</mat-slide-toggle>
+        <mat-slide-toggle [checked]="config.showUpArrow" (change)="onUpArrowChange($event)">Show Scroll to Top Arrow</mat-slide-toggle>
+        <mat-slide-toggle [checked]="config.showDownArrow" (change)="onDownArrowChange($event)">Show Scroll to Bottom Arrow</mat-slide-toggle>
     </div>
     
     
     <hr>
     <h2>Columns</h2>
     <div class="column-section">
-        <ng-container *ngFor="let column of data.columns | keyvalue">
+        <ng-container *ngFor="let column of columnConfig | keyvalue">
             <div class="column-item">
                 <h3>{{getName(column.value)}}</h3>
                 <mat-form-field *ngIf="column.value.name">

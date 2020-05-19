@@ -1,11 +1,11 @@
-import { Component, OnInit, Input, TemplateRef, ViewChild, Inject, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, TemplateRef, ViewChild, Inject, ElementRef, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ColumnMode, DatatableComponent } from '@swimlane/ngx-datatable';
 import { ElasticConnectionService, ESMapping, SortItem } from '@igloo15/elasticsearch-angular-service';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { IColumn } from '../../model/table-types';
-import { TableConfig, ColumnConfig } from '../../model/table-config';
+import { TableConfig, ColumnConfig, TableConfigCollection, ColumnCollection } from '../../model/table-config';
 import { MatDialog } from '@angular/material/dialog';
 import { TableConfigDialogComponent } from '../table-config-dialog/table-config-dialog.component';
 import { EsTableConfigService } from '../../elasticsearch-table.config';
@@ -15,7 +15,7 @@ import { EsTableConfigService } from '../../elasticsearch-table.config';
   templateUrl: './es-table.component.html',
   styleUrls: ['./es-table.component.scss']
 })
-export class EsTableComponent implements OnInit {
+export class EsTableComponent implements OnInit, OnDestroy {
 
   @ViewChild('arrayTmpl', { static: true }) arrayTmpl: TemplateRef<any>;
   @ViewChild('objTmpl', { static: true }) objTmpl: TemplateRef<any>;
@@ -49,6 +49,7 @@ export class EsTableComponent implements OnInit {
   public items: any[];
   public rows: any[];
   public columns: IColumn[] = [];
+  public currentColumnConfig: ColumnCollection = {};
   public searchText: string;
   public searchTextUpdate = new Subject<any>();
   public searchScore: number;
@@ -58,13 +59,15 @@ export class EsTableComponent implements OnInit {
   private _service: ElasticConnectionService;
   private _mappings: ESMapping;
   private _config: TableConfig;
-
+  private _mySub: Subscription;
+  private _myConnSub: Subscription;
+  private _myParamSub: Subscription;
   constructor(service: ElasticConnectionService, public dialog: MatDialog,
-    private route: ActivatedRoute, @Inject(EsTableConfigService) private configService) {
+    private route: ActivatedRoute, @Inject(EsTableConfigService) private configService: TableConfigCollection) {
 
     this._service = service;
     this.items = [];
-    this.searchTextUpdate.pipe(
+    this._mySub = this.searchTextUpdate.pipe(
       debounceTime(500),
       distinctUntilChanged()
     )
@@ -76,21 +79,28 @@ export class EsTableComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     if (!this.config) {
-      this.config = this.configService;
+      this.config = this.configService.default;
     }
     if(this.config.index) {
-      this._service.isStarted.subscribe(async (result) => {
+      this._myConnSub = this._service.isStarted.subscribe(async (result) => {
         if(result) {
           await this.startUp();
         }
       });
     }
-    this.route.paramMap.subscribe(params => {
-      if(params.get('index') && this.config) {
-        this.configService.index = params.get('index');
+    this._myParamSub = this.route.paramMap.subscribe(params => {
+      const indexName = params.get('index');
+      if(this.config && this.config.index !== indexName) {
+        const newIndexConfig = this.configService.indexConfigs.get(indexName);
+        if (newIndexConfig) {
+          this.config = newIndexConfig;
+        } else {
+          this.config = this.configService.default;
+        }
+        this.config.index = indexName;
       }
       if (params.get('offset') && this.config) {
-        this.configService.offset = +params.get('offset');
+        this.config.offset = +params.get('offset');
       }
       this.startUp();
     });
@@ -134,16 +144,17 @@ export class EsTableComponent implements OnInit {
   }
 
   updateMappings() {
+    this.currentColumnConfig = {};
     if(this.config.showIdColumn) {
-      this.config.columns = {
+      this.currentColumnConfig = {
         ...{_id:this.config.idColumn },
-        ...this.config.columns
+        ...this.currentColumnConfig
       }
     }
     if (this.config.showExpandColumn) {
-      this.config.columns = {
+      this.currentColumnConfig = {
         ...{_expandColumn: this._config.expandColumn},
-        ...this._config.columns
+        ...this.currentColumnConfig
       }
     }
     Object.keys(this._mappings.properties).forEach(key => {
@@ -185,17 +196,17 @@ export class EsTableComponent implements OnInit {
           }
           break;
       }
-      this.config.columns[key] = newColumn;
+      this.currentColumnConfig[key] = newColumn;
     });
     if (this.config.showViewColumn) {
-      this.config.columns = {
-        ...this.config.columns,
+      this.currentColumnConfig = {
+        ...this.currentColumnConfig,
         ...{_viewColumn: this.config.viewColumn}
       }
     }
     if (this.config.showEditColumn) {
-      this.config.columns = {
-        ...this.config.columns,
+      this.currentColumnConfig = {
+        ...this.currentColumnConfig,
         ...{_editColumn: this.config.editColumn}
       }
     }
@@ -216,9 +227,9 @@ export class EsTableComponent implements OnInit {
 
   refreshColumns() {
     const newColumns = [];
-    const configColumns = Object.keys(this.config.columns);
+    const configColumns = Object.keys(this.currentColumnConfig);
     configColumns.forEach(key => {
-      const column = this.config.columns[key];
+      const column = this.currentColumnConfig[key];
       if(!column.hide) {
         // if(column.width) {
         //   column.width = null;
@@ -267,10 +278,10 @@ export class EsTableComponent implements OnInit {
   }
 
   toggleColumn(col: string): boolean {
-    this.config.columns[col].hide = !this.config.columns[col].hide;
+    this.currentColumnConfig[col].hide = !this.currentColumnConfig[col].hide;
 
     this.refreshColumns();
-    return this.config.columns[col].hide;
+    return this.currentColumnConfig[col].hide;
   }
 
   toggleExpandRow(row) {
@@ -281,7 +292,7 @@ export class EsTableComponent implements OnInit {
     const dialogRef = this.dialog.open(TableConfigDialogComponent, {
       hasBackdrop: true,
       disableClose: true,
-      data: this._config
+      data: { config: this._config, columnConfig: this.currentColumnConfig }
     });
     dialogRef.afterClosed().subscribe(result => {
       this.refreshColumns();
@@ -291,6 +302,12 @@ export class EsTableComponent implements OnInit {
   documentRoute(row: any, value: any, column: any) {
     const route = column.name === 'View' ? 'view' : 'edit';
     return ['/document', this.config.index, route, row._id];
+  }
+
+  ngOnDestroy() {
+    this._mySub?.unsubscribe();
+    this._myConnSub?.unsubscribe();
+    this._myParamSub?.unsubscribe();
   }
 
 }

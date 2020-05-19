@@ -37,6 +37,9 @@ export class EsDocumentService {
       if (!templateDef) {
         return null;
       }
+      if (prop.type === 'array' && prop.childType === 'object') {
+        return null;
+      }
       const configItem: ESFieldConfig = {
         data: {
           config: itemConfig,
