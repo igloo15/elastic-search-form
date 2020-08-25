@@ -51,7 +51,7 @@ export class ElasticSearchTableModule {
     constructor(router: Router) {
         router.config.push(...tableRoutes);
     }
-    static forRoot(config?: TableConfig | TableConfigCollection): ModuleWithProviders {
+    static forRoot(config?: TableConfig | TableConfigCollection): ModuleWithProviders<ElasticSearchTableModule> {
         config = config ?? new TableConfig('');
         let configCollection = config as TableConfigCollection;
         if (!configCollection.indexConfigs) {

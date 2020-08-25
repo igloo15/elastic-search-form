@@ -83,7 +83,7 @@ export class EsTableComponent implements OnInit, OnDestroy {
     }
     if(this.config.index) {
       this._myConnSub = this._service.isStarted.subscribe(async (result) => {
-        if(result) {
+        if(result && this.config) {
           await this.startUp();
         }
       });
@@ -97,12 +97,14 @@ export class EsTableComponent implements OnInit, OnDestroy {
         } else {
           this.config = this.configService.default;
         }
-        this.config.index = indexName;
       }
       if (params.get('offset') && this.config) {
         this.config.offset = +params.get('offset');
       }
-      this.startUp();
+      if (this.config) {
+        this.config.index = indexName;
+        this.startUp();
+      }
     });
 
   }

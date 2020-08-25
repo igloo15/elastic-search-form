@@ -28,7 +28,7 @@ export interface ESFieldItemConfig {
     invertedSlider?: boolean;
     sliderTooltip?: boolean;
     numOptions?: number[];
-    stringOptions?: number[];
+    stringOptions?: string[];
     multiSelect?: boolean;
     showTextArea?: boolean;
     textAreaMinRows?: number;

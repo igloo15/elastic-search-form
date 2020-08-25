@@ -27,6 +27,7 @@ import { ESDocumentConfig, ESDocumentBuilder, ESDocumentConfigCollection } from 
 import { EsDocumentConfigService } from './elasticsearch-document-token.config';
 import { EsFieldSelectComponent } from './components/es-field-select/es-field-select.component';
 import { EsFieldSliderComponent } from './components/es-field-slider/es-field-slider.component';
+import { EsFieldTableComponent } from './components/es-field-table/es-field-table.component';
 
 export const documentRoutes: Routes = [
     { path: 'document/:index/view/:id', component: EsDocumentComponent},
@@ -57,14 +58,14 @@ export const documentRoutes: Routes = [
     ],
     declarations: [EsDocumentComponent, EsFieldWrapperComponent, EsFieldHostDirective, EsFieldInputComponent,
         EsFieldToggleComponent, EsFieldChipsComponent, EsFieldNumberInputComponent, EsFieldDateComponent, 
-        EsFieldSelectComponent, EsFieldSliderComponent]
+        EsFieldSelectComponent, EsFieldSliderComponent, EsFieldTableComponent]
 })
 export class ElasticSearchDocumentModule {
     constructor(router: Router) {
         router.config.push(...documentRoutes);
     }
 
-    static forRoot(config?: ESDocumentConfig | ESDocumentConfigCollection): ModuleWithProviders {
+    static forRoot(config?: ESDocumentConfig | ESDocumentConfigCollection): ModuleWithProviders<ElasticSearchDocumentModule> {
         config = config ?? new ESDocumentBuilder().build();
         let localConfigCollection = config as ESDocumentConfigCollection;
         if (!localConfigCollection.indexConfigs) {

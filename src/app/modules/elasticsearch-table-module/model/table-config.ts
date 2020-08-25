@@ -2,7 +2,7 @@ import { SortItem } from '@igloo15/elasticsearch-angular-service';
 import { TemplateRef } from '@angular/core';
 
 export interface TableConfigCollection {
-    default: TableConfig;
+    default?: TableConfig;
     indexConfigs: Map<string, TableConfig>;
 }
 
