@@ -4,7 +4,7 @@
     [max]="data.config.max" 
     [step]="getInterval()" 
     [value]="getValue()" 
-    [disabled]="data.config.disable"
+    [disabled]="isDisabled()"
     [vertical]="data.config.verticalSlider"
     [invert]="data.config.invertedSlider"
     [thumbLabel]="data.config.sliderTooltip"

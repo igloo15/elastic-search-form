@@ -18,6 +18,7 @@ export class EsDocumentComponent implements OnInit, OnDestroy {
   public model: ModelRoot;
   public isLoading = true;
 
+
   @Input()
   public set index(val: string) {
     this.config.index = val;
@@ -46,6 +47,22 @@ export class EsDocumentComponent implements OnInit, OnDestroy {
     return this._config;
   }
 
+  private _disabled = false;
+  public get disabled(): boolean {
+    if(this.config && !this._disabled) {
+      return this.config.disable;
+    }
+    return this._disabled;
+  }
+
+  public set disabled(val: boolean) {
+    if(this.config) {
+      this.config.disable = val;
+    } else {
+      this._disabled = val;
+    }
+  }
+
   public title = '';
   public rows: Row[] = [];
 
@@ -60,18 +77,20 @@ export class EsDocumentComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (!this.config) {
       this.config = this.documentService.getDefaultConfig();
-      this.config.style.stretch = true;
-      this.config.redirectToTable = true;
+      if(this.config) {
+        this.config.style.stretch = true;
+        this.config.redirectToTable = true;
+      }
     }
     this._myUrlSub = this.route.url.subscribe(segments => {
       if (segments.length > 3) {
-        this.config.disable = segments[2].path === 'view';
+        this.disabled = segments[2].path === 'view';
       }
     });
     this._myParamSub = this.route.paramMap.subscribe(params => {
       const indexName = params.get('index');
       if(indexName) {
-        if (this.config.index !== indexName) {
+        if (!this.config || this.config.index !== indexName) {
           this.config = this.documentService.getIndexConfig(indexName);
         }
         this.index = indexName;
@@ -103,11 +122,7 @@ export class EsDocumentComponent implements OnInit, OnDestroy {
   }
 
   private updateFormConfig() {
-    if (this._config.fields.length > 0) {
-      this.rows = [...this.documentService.parseWithConfig(this.model, this.config)];
-    } else {
-      this.rows = [...this.documentService.parseWithoutConfig(this.model, this.config)];
-    }
+    this.rows = [...this.documentService.parse(this.model, this.config, this.disabled)];
   }
 
   getStyle(config: ESDocumentStyleConfig) {
@@ -120,7 +135,6 @@ export class EsDocumentComponent implements OnInit, OnDestroy {
 
   save() {
     const newModel = this.documentService.recreateData(this.model);
-    console.log(newModel);
     this.esService.updateData(this.config.index, newModel, this.config.id);
     this.redirectConfig();
   }

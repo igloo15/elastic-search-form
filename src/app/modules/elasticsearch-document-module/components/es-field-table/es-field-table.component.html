@@ -1,1 +1,8 @@
-<p>es-field-table works!</p>
+<h4>{{getTitle()}}</h4>
+<ng-container *ngFor="let item of getValue() | keyvalue">
+    <mat-form-field [style]="getStyle()" >
+        <mat-label>{{item.key | deCamelCase}}</mat-label>
+        <input matInput [value]="getKeyValue(item.key)" [disabled]="isDisabled()" (keyup)="onTextChange($event, item.key)">    
+    </mat-form-field>
+</ng-container>
+

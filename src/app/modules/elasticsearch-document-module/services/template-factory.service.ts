@@ -7,6 +7,7 @@ import { EsFieldNumberInputComponent } from '../components/es-field-number-input
 import { EsFieldDateComponent } from '../components/es-field-date/es-field-date.component';
 import { EsFieldSelectComponent } from '../components/es-field-select/es-field-select.component';
 import { EsFieldSliderComponent } from '../components/es-field-slider/es-field-slider.component';
+import { EsFieldTableComponent } from '../components/es-field-table/es-field-table.component';
 
 @Injectable({
   providedIn: 'root'
@@ -43,6 +44,10 @@ export class TemplateFactoryService {
     this.addTemplate({
       type: 'slider',
       template: EsFieldSliderComponent
+    });
+    this.addTemplate({
+      type: 'table',
+      template: EsFieldTableComponent
     });
   }
 

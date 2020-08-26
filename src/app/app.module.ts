@@ -11,7 +11,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { AppComponent } from './app.component';
 import { ElasticSearchServiceModule } from '@igloo15/elasticsearch-angular-service';
 import { ElasticSearchTableModule, tableRoutes, TableConfig } from './modules/elasticsearch-table-module/public-api';
-import { ElasticSearchDocumentModule, ESDocumentBuilder, ESDocumentConfig } from './modules/elasticsearch-document-module/public-api';
+import { ElasticSearchDocumentModule, ESDocumentBuilder, ESDocumentConfig, ESDocumentConfigCollection } from './modules/elasticsearch-document-module/public-api';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
 const documentConfig: ESDocumentConfig = new ESDocumentBuilder('', '', 'My Amazing Form')
@@ -36,6 +36,19 @@ const documentConfig: ESDocumentConfig = new ESDocumentBuilder('', '', 'My Amazi
 .addItem({key: 'testText', type:'input', title: 'My Short Title', stringLimit: 100, showTextArea: true, style:{stretch: true}})
 .done()
 .build();
+
+const docConfig = new ESDocumentBuilder('new-test', '', 'My Amazing Form')
+.setRedirect('', true)
+.addRow('')
+.addStyle({stretch: true})
+.addItem({key: 'testText', type:'select', title:'My Data', stringOptions:['test', 'test1', 'test2', 'test3'],  style: {stretch: true}})
+.done()
+.build();
+const collectionConfig: ESDocumentConfigCollection = {
+  indexConfigs: {
+    'new-test': docConfig
+  }
+}
 
 @NgModule({
   declarations: [

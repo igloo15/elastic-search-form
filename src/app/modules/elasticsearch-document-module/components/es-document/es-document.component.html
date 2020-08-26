@@ -1,26 +1,28 @@
-<mat-card [style]="getStyle(config.style)" >
-    <mat-card-header *ngIf="!isLoading">
-        <mat-card-title>{{title}}</mat-card-title>
-    </mat-card-header>
-    <mat-card-content class="form-container">
-        <ng-container *ngIf="!isLoading">
-            <div *ngFor="let row of rows" [style]="getStyle(row.config.style)" class="form-row-wrapper">
-                <h3 *ngIf="row.config.title">{{getTitle(row.config.title)}}</h3>
-                <div class="form-row">
-                    <ng-container *ngFor="let item of row.items">
-                        <es-field-wrapper [config]="item" [style]="getStyle(item.data.config.style)"></es-field-wrapper>
-                    </ng-container>
+<ng-container *ngIf="config">
+    <mat-card [style]="getStyle(config.style)" >
+        <mat-card-header *ngIf="!isLoading">
+            <mat-card-title>{{title}}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="form-container">
+            <ng-container *ngIf="!isLoading">
+                <div *ngFor="let row of rows" [style]="getStyle(row.config.style)" class="form-row-wrapper">
+                    <h3 *ngIf="row.config.title">{{getTitle(row.config.title)}}</h3>
+                    <div class="form-row">
+                        <ng-container *ngFor="let item of row.items">
+                            <es-field-wrapper [config]="item" [style]="getStyle(item.data.config.style)"></es-field-wrapper>
+                        </ng-container>
+                    </div>
                 </div>
+            </ng-container>
+            <div *ngIf="isLoading" class="form-spinner">
+                <mat-spinner [diameter]="20"></mat-spinner>
+                <mat-label>Loading...</mat-label>
             </div>
-        </ng-container>
-        <div *ngIf="isLoading" class="form-spinner">
-            <mat-spinner [diameter]="20"></mat-spinner>
-            <mat-label>Loading...</mat-label>
-        </div>
-        
-    </mat-card-content>
-    <mat-card-actions *ngIf="!isLoading">
-        <button style="font-weight: bold;" mat-button (click)="save()">SAVE</button>
-        <button style="font-weight: bold;" mat-button (click)="cancel()" *ngIf="config.redirect || config.redirectToTable">CANCEL</button>
-    </mat-card-actions>
-</mat-card>
+            
+        </mat-card-content>
+        <mat-card-actions *ngIf="!isLoading">
+            <button style="font-weight: bold;" mat-button (click)="save()" *ngIf="!disabled">SAVE</button>
+            <button style="font-weight: bold;" mat-button (click)="cancel()" *ngIf="config.redirect || config.redirectToTable">CANCEL</button>
+        </mat-card-actions>
+    </mat-card>
+</ng-container>

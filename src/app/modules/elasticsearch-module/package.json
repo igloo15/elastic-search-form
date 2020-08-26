@@ -21,8 +21,8 @@
     "elasticsearch-browser": "16.7.1"
   },
   "peerDependencies": {
-    "@angular/common": "^9.1.2",
-    "@angular/core": "^9.1.2"
+    "@angular/common": "^10.0.12",
+    "@angular/core": "^10.0.12"
   },
   "readme": "ERROR: No README data found!",
   "_id": "@igloo15/elasticsearch-document-editor@0.2.0-dev.1",

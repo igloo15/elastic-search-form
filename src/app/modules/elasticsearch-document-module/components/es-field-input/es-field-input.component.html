@@ -1,9 +1,9 @@
 <mat-form-field [style]="getStyle()">
     <mat-label>{{getTitle()}}</mat-label>
-    <input matInput *ngIf="!data.config.showTextArea" [value]="getValue()" [disabled]="data.config.disable" (keyup)="onTextChange($event)">
+    <input matInput *ngIf="!data.config.showTextArea" [value]="getValue()" [disabled]="isDisabled()" (keyup)="onTextChange($event)">
     <textarea matInput *ngIf="data.config.showTextArea" 
         [value]="getValue()" 
-        [disabled]="data.config.disable" 
+        [disabled]="isDisabled()" 
         [mat-autosize]="true"
         [matAutosizeMinRows]="data.config.textAreaMinRows"
         [matAutosizeMaxRows]="data.config.textAreaMaxRows"

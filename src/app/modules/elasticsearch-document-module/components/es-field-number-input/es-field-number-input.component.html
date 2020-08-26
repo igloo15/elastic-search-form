@@ -1,6 +1,6 @@
 <mat-form-field [style]="getStyle()">
     <mat-label>{{getTitle()}}</mat-label>
-    <input matInput [value]="getValue()" [disabled]="data.config.disable" type="number" (keyup)="onNumberChange($event)" (change)="onNumberChange($event)">
+    <input matInput [value]="getValue()" [disabled]="isDisabled()" type="number" (keyup)="onNumberChange($event)" (change)="onNumberChange($event)">
     <mat-hint align="start" *ngIf="showError">Min: {{data.config.min}}  Max: {{data.config.max}}</mat-hint>
     <mat-hint align="start" *ngIf="showDecimalError">Number must be a whole number(no decimals)</mat-hint>
 </mat-form-field>

@@ -2,8 +2,8 @@ import { TemplateRef, Type } from '@angular/core';
 import { ESFieldData } from './field-data';
 
 export interface ESDocumentConfigCollection {
-    default: ESDocumentConfig;
-    indexConfigs: Map<string, ESDocumentConfig>;
+    default?: ESDocumentConfig;
+    indexConfigs: {[key:string]: ESDocumentConfig };
 }
 
 export type TitleType = string | ((model: any) => string);
@@ -50,11 +50,11 @@ export interface ESDocumentRowConfig {
 export interface ESDocumentConfig {
     index: string;
     id: string;
+    title?: TitleType;
     fields: ESDocumentRowConfig[];
     style: ESDocumentStyleConfig;
     redirect?: string;
     redirectToTable?: boolean;
-    title?: TitleType;
     disable?: boolean;
 }
 
@@ -90,6 +90,8 @@ export class ESDocumentRowBuilder {
     }
 }
 
+
+
 export class ESDocumentBuilder {
     data: ESDocumentConfig;
     rowBuilders: ESDocumentRowBuilder[] = [];
@@ -115,6 +117,20 @@ export class ESDocumentBuilder {
 
     addStyle(style: ESDocumentStyleConfig): ESDocumentBuilder {
         this.data.style = {...this.data.style, ...style};
+        return this;
+    }
+
+    setRedirect(redirect?: string, redirectToTable?: boolean): ESDocumentBuilder  {
+        if(redirect) {
+            this.data.redirect = redirect;
+        } else {
+            this.data.redirectToTable = redirectToTable;
+        }
+        return this;
+    }
+
+    setDisabled(disabled: boolean): ESDocumentBuilder  {
+        this.data.disable = disabled;
         return this;
     }
 

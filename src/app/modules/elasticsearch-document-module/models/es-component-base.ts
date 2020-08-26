@@ -13,6 +13,10 @@ export abstract class EsComponentBase implements ESFieldComponent {
         this.onDataSet();
     }
 
+    isDisabled(): boolean {
+        return this.data.disabled;
+    }
+
     onDataSet() { }
 
     getTitle() {

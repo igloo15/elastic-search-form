@@ -3,7 +3,7 @@ import { TemplateRef } from '@angular/core';
 
 export interface TableConfigCollection {
     default?: TableConfig;
-    indexConfigs: Map<string, TableConfig>;
+    indexConfigs: { [ key: string ]: TableConfig };
 }
 
 export interface ColumnConfig {

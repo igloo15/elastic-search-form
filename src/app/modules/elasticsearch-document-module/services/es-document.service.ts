@@ -26,10 +26,11 @@ export class EsDocumentService {
   }
 
   getIndexConfig(index: string) {
-    return this.configService.indexConfigs.get(index) ?? this.configService.default;
+    return this.configService.indexConfigs[index] ?? this.configService.default;
   }
 
-  getConfig(prop: ModelProp, itemConfig: ESFieldItemConfig): ESFieldConfig {
+  getConfig(prop: ModelProp, itemConfig: ESFieldItemConfig, disabled?: boolean): ESFieldConfig {
+
     const type = this.convertToTemplateType(prop, itemConfig);
     if (type) {
       itemConfig.type = type;
@@ -40,9 +41,15 @@ export class EsDocumentService {
       if (prop.type === 'array' && prop.childType === 'object') {
         return null;
       }
+      let fieldDisabled = itemConfig.disable;
+      if (disabled !== null && disabled !== undefined && disabled && !itemConfig.disable) {
+        fieldDisabled = disabled;
+      }
+
       const configItem: ESFieldConfig = {
         data: {
           config: itemConfig,
+          disabled: fieldDisabled,
           model: prop
         },
         template: templateDef.template
@@ -53,7 +60,7 @@ export class EsDocumentService {
     return null;
   }
 
-  getProp(keys: string[], index: number, model: ModelRoot | ModelProp) {
+  getProp(keys: string[], index: number, model: ModelRoot | ModelProp): ModelProp {
     if (model.properties) {
       for(const prop of model.properties) {
         if (prop.key === keys[index]) {
@@ -222,31 +229,53 @@ export class EsDocumentService {
     return propData;
   }
 
-  parseWithConfig(model: ModelRoot, config: ESDocumentConfig): Row[] {
-    const newRows: Row[] = [];
-    for(const row of config.fields) {
-      const fieldConfigs: ESFieldConfig[] = [];
-      row.columns.forEach(value => {
-        if(config.disable) {
-          value.disable = config.disable;
-        }
-        const prop = this.getProp(value.key.split('.'), 0, model);
-        const result = this.getConfig(prop, value);
-        if (result) {
-          fieldConfigs.push(result);
-        }
-      });
-      newRows.push(this.createRow(fieldConfigs, row));
-    }
-    return newRows;
-  }
+  // parseWithConfig(model: ModelRoot, config: ESDocumentConfig): Row[] {
+  //   const newRows: Row[] = [];
+  //   for(const row of config.fields) {
+  //     const fieldConfigs: ESFieldConfig[] = [];
+  //     row.columns.forEach(value => {
+  //       if(config.disable) {
+  //         value.disable = config.disable;
+  //       }
+  //       const prop = this.getProp(value.key.split('.'), 0, model);
+  //       const result = this.getConfig(prop, value);
+  //       if (result) {
+  //         fieldConfigs.push(result);
+  //       }
+  //     });
+  //     newRows.push(this.createRow(fieldConfigs, row));
+  //   }
+  //   return newRows;
+  // }
 
-  parseWithoutConfig(model: ModelRoot, config: ESDocumentConfig): Row[] {
+  // parseWithoutConfig(model: ModelRoot, config: ESDocumentConfig): Row[] {
+  //   const newRows: Row[] = [];
+  //   for(const prop of model.properties) {
+  //     const formConfig = this.getConfig(prop, this.createEmptyEsFieldItemConfig(prop, config.disable));
+  //     if (formConfig) {
+  //       newRows.push(this.createRow([formConfig]));
+  //     }
+  //   }
+  //   return newRows;
+  // }
+
+  parse(model: ModelRoot, config: ESDocumentConfig, disable?: boolean): Row[] {
     const newRows: Row[] = [];
-    for(const prop of model.properties) {
-      const formConfig = this.getConfig(prop, this.createEmptyEsFieldItemConfig(prop, config));
-      if (formConfig) {
-        newRows.push(this.createRow([formConfig]));
+    const usingConfig = config.fields.length > 0;
+    const rowCount = usingConfig ? config.fields.length : model.properties.length;
+    for (let i = 0; i < rowCount; i++) {
+      const columnCount = usingConfig ? config.fields[i].columns.length : 1;
+      const fieldConfigs: ESFieldConfig[] = [];
+      for (let j = 0; j < columnCount; j++) {
+        const prop = usingConfig ? this.getProp(config.fields[i].columns[j].key.split('.'), 0, model) : model.properties[i];
+        const fieldItemConfig = usingConfig ? config.fields[i].columns[j] : this.createEmptyEsFieldItemConfig(prop, config.disable);
+        const fieldConfig = this.getConfig(prop, fieldItemConfig, disable);
+        if (fieldConfig) {
+          fieldConfigs.push(fieldConfig);
+        }
+      }
+      if(fieldConfigs.length > 0) {
+        newRows.push(this.createRow(fieldConfigs, usingConfig ? config.fields[i] : undefined))
       }
     }
     return newRows;
@@ -269,12 +298,12 @@ export class EsDocumentService {
     }
   }
 
-  createEmptyEsFieldItemConfig(prop: ModelProp, config: ESDocumentConfig) {
+  createEmptyEsFieldItemConfig(prop: ModelProp, disable: boolean): ESFieldItemConfig {
     return {
       key:'',
       type: '',
       title: DocumentUtility.capitalize(prop.key),
-      disable: config.disable,
+      disable,
       style: {
         stretch: true
       }

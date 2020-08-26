@@ -14,6 +14,7 @@ export interface ESFieldComponent {
 export interface ESFieldData {
     config: ESFieldItemConfig;
     model: ModelProp;
+    disabled: boolean;
 }
 
 export interface ESFieldDefinition {

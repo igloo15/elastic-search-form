@@ -55,7 +55,7 @@ export class ElasticSearchTableModule {
         config = config ?? new TableConfig('');
         let configCollection = config as TableConfigCollection;
         if (!configCollection.indexConfigs) {
-            configCollection = { default: config as TableConfig, indexConfigs: new Map<string, TableConfig>() };
+            configCollection = { default: config as TableConfig, indexConfigs: {} };
         }
         return {
             ngModule: ElasticSearchTableModule,

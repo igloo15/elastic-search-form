@@ -21,13 +21,13 @@ export class DocumentUtility {
     }
 
     static getTitle(title: TitleType, model: any, key: string): string {
-        if (typeof title === 'string') return title;
-        if (!title) return this.capitalize(key);
-        return title(model);
+        if (typeof title === 'string') return this.deCamelCase(title);
+        if (!title) return this.deCamelCase(this.capitalize(key));
+        return this.deCamelCase(title(model));
     }
 
     static getStyle(config: ESDocumentStyleConfig): string {
-        if (!config) {
+        if (!config || config === {}) {
             return '';
         }
         let width = 'width:""';
@@ -47,5 +47,9 @@ export class DocumentUtility {
         }
 
         return `${width};${height};box-sizing:border-box;${config.extraStyle}`;
+    }
+
+    static deCamelCase(str: string): string {
+        return str.replace(/([A-Z])/g, match => ` ${match}`).replace(/^./, match => match.toUpperCase());
     }
 }

@@ -124,7 +124,7 @@
               "src/app/styles.scss"
             ],
             "scripts": [],
-            "es5BrowserSupport": true
+            //"es5BrowserSupport": true
           },
           "configurations": {
             "production": {

@@ -28,6 +28,7 @@ import { EsDocumentConfigService } from './elasticsearch-document-token.config';
 import { EsFieldSelectComponent } from './components/es-field-select/es-field-select.component';
 import { EsFieldSliderComponent } from './components/es-field-slider/es-field-slider.component';
 import { EsFieldTableComponent } from './components/es-field-table/es-field-table.component';
+import { DeCamelCasePipe } from './pipes/de-camel-case.pipe';
 
 export const documentRoutes: Routes = [
     { path: 'document/:index/view/:id', component: EsDocumentComponent},
@@ -58,7 +59,7 @@ export const documentRoutes: Routes = [
     ],
     declarations: [EsDocumentComponent, EsFieldWrapperComponent, EsFieldHostDirective, EsFieldInputComponent,
         EsFieldToggleComponent, EsFieldChipsComponent, EsFieldNumberInputComponent, EsFieldDateComponent, 
-        EsFieldSelectComponent, EsFieldSliderComponent, EsFieldTableComponent]
+        EsFieldSelectComponent, EsFieldSliderComponent, EsFieldTableComponent, DeCamelCasePipe]
 })
 export class ElasticSearchDocumentModule {
     constructor(router: Router) {
@@ -69,7 +70,7 @@ export class ElasticSearchDocumentModule {
         config = config ?? new ESDocumentBuilder().build();
         let localConfigCollection = config as ESDocumentConfigCollection;
         if (!localConfigCollection.indexConfigs) {
-            localConfigCollection = { default: config as ESDocumentConfig, indexConfigs: new Map<string, ESDocumentConfig>() };
+            localConfigCollection = { default: config as ESDocumentConfig, indexConfigs: {} };
         }
         return {
             ngModule: ElasticSearchDocumentModule,
