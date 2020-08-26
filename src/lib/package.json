@@ -1,7 +1,7 @@
 {
   "name": "@igloo15/elasticsearch-document-editor",
   "description": "ElasticSearch angular material document editor",
-  "version": "0.5.0-dev.2",
+  "version": "0.6.0-dev.3",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/igloo15/elastic-search-form.git"
@@ -26,5 +26,5 @@
   },
   "readme": "ERROR: No README data found!",
   "_id": "@igloo15/elasticsearch-document-editor@0.2.0-dev.3",
-  "date": "Mon May 18 2020"
+  "date": "Tue Aug 25 2020"
 }
