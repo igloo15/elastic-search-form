@@ -65,7 +65,7 @@ const collectionConfig: ESDocumentConfigCollection = {
     DragDropModule,
     ElasticSearchServiceModule,
     ElasticSearchTableModule.forRoot(),
-    ElasticSearchDocumentModule.forRoot(),
+    ElasticSearchDocumentModule.forRoot(collectionConfig),
     NgxJsonViewerModule
   ],
   providers: [],

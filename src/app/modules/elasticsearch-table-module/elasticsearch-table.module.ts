@@ -16,6 +16,7 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { TableConfigDialogComponent } from './components/table-config-dialog/table-config-dialog.component';
 import { TableConfig, TableConfigCollection } from './model/table-config';
 import { EsTableConfigService } from './elasticsearch-table.config';
+import { ReactiveFormsModule } from '@angular/forms';
 
 export const tableRoutes: Routes = [
     { path: 'table/:index/:offset', component: EsTableComponent },
@@ -30,6 +31,7 @@ export const tableRoutes: Routes = [
     imports: [
         BrowserModule,
         HttpClientModule,
+        ReactiveFormsModule,
         MatInputModule,
         MatChipsModule,
         MatIconModule,

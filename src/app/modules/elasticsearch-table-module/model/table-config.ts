@@ -1,14 +1,16 @@
 import { SortItem } from '@igloo15/elasticsearch-angular-service';
 import { TemplateRef } from '@angular/core';
+import { IColumn } from './table-types';
 
 export interface TableConfigCollection {
     default?: TableConfig;
     indexConfigs: { [ key: string ]: TableConfig };
 }
 
-export interface ColumnConfig {
+export interface ColumnConfig extends IColumn {
     prop: string;
-    name?: string;
+    name: string;
+    key: string;
     displayName?: string;
     type?: 'basic'|'array'|'object'|'link';
     minWidth?: number;
@@ -95,6 +97,7 @@ export class TableConfig {
 
     public showSearch = true;
     public showLimitDropDown = true;
+    public showColumnDropDown = true;
     public showUpArrow = true;
     public showDownArrow = true;
     public showRefresh = true;
@@ -109,6 +112,7 @@ export class TableConfig {
         prop: '',
         name: '',
         displayName: 'Expand Column',
+        key:'_expandColumn',
         width: 50,
         minWidth:50,
         maxWidth:50,
@@ -122,6 +126,7 @@ export class TableConfig {
     public idColumn: ColumnConfig = {
         prop: '_id',
         name: 'Id',
+        key:'_id',
         hide: false,
         type: 'basic',
         sortable: false
@@ -132,6 +137,7 @@ export class TableConfig {
     public viewColumn: ColumnConfig = {
         prop: '',
         name: 'View',
+        key:'_viewColumn',
         hide: false,
         type: 'link',
         sortable: false,
@@ -144,6 +150,7 @@ export class TableConfig {
     public editColumn: ColumnConfig = {
         prop: '',
         name: 'Edit',
+        key: '_editColumn',
         hide: false,
         type: 'link',
         sortable: false,

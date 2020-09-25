@@ -11,7 +11,16 @@
             </mat-select>
         </mat-form-field>
         
+        
         <div class="spacer"></div>
+        <mat-form-field *ngIf="config.showColumnDropDown && currentColumnConfig">
+            <mat-select [value]="columns" multiple>
+                <mat-select-trigger>
+                    Columns
+                </mat-select-trigger>
+                <mat-option *ngFor="let item of allColumns" [value]="item" (click)="toggleColumn(item.key)">{{getTitle(item)}}</mat-option>
+            </mat-select>
+        </mat-form-field>
         <button mat-mini-fab color="primary" (click)="scrollUpOrDown(bottomButton)" class="button-margins" *ngIf="config.showDownArrow" #topButton>
             <mat-icon>arrow_downward</mat-icon>
         </button>

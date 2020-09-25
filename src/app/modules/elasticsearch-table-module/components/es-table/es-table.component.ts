@@ -9,6 +9,7 @@ import { TableConfig, ColumnConfig, TableConfigCollection, ColumnCollection } fr
 import { MatDialog } from '@angular/material/dialog';
 import { TableConfigDialogComponent } from '../table-config-dialog/table-config-dialog.component';
 import { EsTableConfigService } from '../../elasticsearch-table.config';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'es-table',
@@ -45,6 +46,16 @@ export class EsTableComponent implements OnInit, OnDestroy {
   public get config(): TableConfig {
     return this._config;
   }
+
+
+  public get allColumns() {
+    return Object.keys(this.currentColumnConfig).map((value) => {
+      return this.currentColumnConfig[value];
+    });
+  }
+
+  
+
   public ColumnMode = ColumnMode;
   public items: any[];
   public rows: any[];
@@ -168,6 +179,8 @@ export class EsTableComponent implements OnInit, OnDestroy {
       } else {
         newColumn = {
           prop: key,
+          name: this.transformTitle(key),
+          key,
           type: 'basic',
           sortable: true,
           addKeyword: false
@@ -219,6 +232,15 @@ export class EsTableComponent implements OnInit, OnDestroy {
     await this.refreshData();
   }
 
+  public getTitle(val: ColumnConfig) {
+    return val.displayName ?? val.name ?? val.prop;
+  }
+
+  public  transformTitle(value: string)
+  {
+    return value.replace(/([A-Z])/g, match => ` ${match}`).replace(/^./, match => match.toUpperCase());
+  }
+
   onSort(event) {
     this.config.sortItem = {field: event.column.prop, type: event.newValue};
     if(event.column.addKeyword) {
@@ -228,7 +250,7 @@ export class EsTableComponent implements OnInit, OnDestroy {
   }
 
   refreshColumns() {
-    const newColumns = [];
+    const newColumns: IColumn[] = [];
     const configColumns = Object.keys(this.currentColumnConfig);
     configColumns.forEach(key => {
       const column = this.currentColumnConfig[key];

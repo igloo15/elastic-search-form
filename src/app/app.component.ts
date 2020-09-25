@@ -13,6 +13,8 @@ export class AppComponent {
   answer = '';
   tableConfig = new TableConfig('test').addColumn({
     prop: 'friends',
+    name: 'friends',
+    key: 'friends',
     type: 'array'
   });
 
