@@ -41,7 +41,7 @@ const docConfig = new ESDocumentBuilder('new-test', '', 'My Amazing Form')
 .setRedirect('', true)
 .addRow('')
 .addStyle({stretch: true})
-.addItem({key: 'testText', type:'select', title:'My Data', stringOptions:['test', 'test1', 'test2', 'test3'],  style: {stretch: true}})
+.addItem({key: 'testArray', type:'select', multiSelect:true, title:'My Data', numOptions:[13, 14, 99, 108, 32, 15],  style: {stretch: true}})
 .done()
 .build();
 const collectionConfig: ESDocumentConfigCollection = {

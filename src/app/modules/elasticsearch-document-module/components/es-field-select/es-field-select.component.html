@@ -11,7 +11,8 @@
     </mat-select>
     <mat-select *ngIf="data.config.stringOptions" 
       [value]="getValue()" 
-      [disabled]="isDisabled()" 
+      [disabled]="isDisabled()"
+      [multiple]="data.config.multiSelect"  
       (selectionChange)="setValue($event.value)">
       <mat-option *ngFor="let stringOption of data.config.stringOptions" [value]="stringOption">
         {{stringOption}}
