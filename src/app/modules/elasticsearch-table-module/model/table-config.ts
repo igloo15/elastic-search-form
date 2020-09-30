@@ -43,6 +43,7 @@ export class TableConfig {
     private _limit = 10;
 
     public index: string;
+    public showExtra = true;
 
     public get limit() {
         return this._limit;

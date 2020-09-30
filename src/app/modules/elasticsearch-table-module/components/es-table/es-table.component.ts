@@ -170,49 +170,73 @@ export class EsTableComponent implements OnInit, OnDestroy {
         ...this.currentColumnConfig
       }
     }
-    Object.keys(this._mappings.properties).forEach(key => {
-      const item = this._mappings.properties[key];
-      let newColumn: ColumnConfig;
-      if (this.config.columns[key]) {
-        newColumn = this.config.columns[key];
-        newColumn.addKeyword = false;
-      } else {
-        newColumn = {
-          prop: key,
-          name: this.transformTitle(key),
-          key,
-          type: 'basic',
-          sortable: true,
-          addKeyword: false
-        };
-      }
-      if (item.fields?.keyword) {
-        newColumn.addKeyword = true;
-      }
-      if (item.meta) {
-        newColumn.type = item.meta.array ? 'array' : 'basic';
-      }
-      if (item.properties) {
-        newColumn.type = 'object';
-      }
-
-      switch(newColumn.type) {
-        case 'array':
-          newColumn.cellTemplate = this.arrayTmpl;
-          break;
-        case 'object':
-          newColumn.cellTemplate = this.objTmpl;
-          break;
-        default:
-          if (item.type && this.config.dataConverters[item.type]) {
-            newColumn.cellTemplate = this.config.dataConverters[item.type].template;
-          } else {
-            newColumn.cellTemplate = this.basicTmpl;
-          }
-          break;
-      }
-      this.currentColumnConfig[key] = newColumn;
+    const columnKeys = Object.keys(this.config.columns);
+    const myColumns = columnKeys.map(key => {
+      const newColumn = this.config.columns[key];
+      newColumn.addKeyword = false;
+      return newColumn;
     });
+    const extraColumns = Object.keys(this._mappings.properties).filter(key => columnKeys.indexOf(key) === -1).map(key => {
+      const newColumn: ColumnConfig = {
+        prop: key,
+        name: this.transformTitle(key),
+        key,
+        type: 'basic',
+        sortable: true,
+        addKeyword: false
+      }
+      return newColumn;
+    });
+    if(this.config.showExtra) {
+      myColumns.push(...extraColumns);
+    }
+    myColumns.forEach(columnConfig => {
+      const item = this._mappings.properties[columnConfig.prop];
+      if(item) {
+        if (item.fields?.keyword) {
+          columnConfig.addKeyword = true;
+        }
+        if (item.meta) {
+          columnConfig.type = item.meta.array ? 'array' : 'basic';
+        }
+        if (item.properties) {
+          columnConfig.type = 'object';
+        }
+        switch(columnConfig.type) {
+          case 'array':
+            columnConfig.cellTemplate = this.arrayTmpl;
+            break;
+          case 'object':
+            columnConfig.cellTemplate = this.objTmpl;
+            break;
+          default:
+            if (item.type && this.config.dataConverters[item.type]) {
+              columnConfig.cellTemplate = this.config.dataConverters[item.type].template;
+            } else {
+              columnConfig.cellTemplate = this.basicTmpl;
+            }
+            break;
+        }
+        this.currentColumnConfig[columnConfig.prop] = columnConfig;
+      }
+    });
+    // Object.keys(this._mappings.properties).forEach(key => {
+    //   const item = this._mappings.properties[key];
+    //   let newColumn: ColumnConfig;
+    //   if (this.config.columns[key]) {
+    //     newColumn = this.config.columns[key];
+    //     newColumn.addKeyword = false;
+    //   } else {
+    //     newColumn = {
+    //       prop: key,
+    //       name: this.transformTitle(key),
+    //       key,
+    //       type: 'basic',
+    //       sortable: true,
+    //       addKeyword: false
+    //     };
+    //   }
+    // });
     if (this.config.showViewColumn) {
       this.currentColumnConfig = {
         ...this.currentColumnConfig,

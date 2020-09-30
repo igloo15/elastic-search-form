@@ -10,7 +10,7 @@ import { TableConfig } from './modules/elasticsearch-table-module/model/table-co
 })
 export class AppComponent {
   title = 'baseturn-game';
-  answer = '';
+  answer = false;
   tableConfig = new TableConfig('test').addColumn({
     prop: 'friends',
     name: 'friends',
@@ -21,7 +21,7 @@ export class AppComponent {
   constructor(private elasticService: ElasticConnectionService) {
     this.elasticService
       .start('http://192.168.50.215:9200')
-      .then((value: string) => {
+      .then((value: boolean) => {
         this.answer = value;
         const myGenerator = new DataGenerator();
         const dataCount = 2;
