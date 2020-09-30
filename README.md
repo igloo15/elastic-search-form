@@ -8,3 +8,5 @@ This project is will create a basic angular material document viewer and editor 
 
 `@igloo15/elasticsearch-angular-table`
 
+`@igloo15/elasticsearch-document-editor`
+
