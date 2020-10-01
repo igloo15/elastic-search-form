@@ -1,4 +1,4 @@
-<mat-form-field>
+<mat-form-field [style]="getStyle()">
     <mat-label>{{getTitle()}}</mat-label>
     <mat-select *ngIf="data.config.numOptions" 
       [value]="getValue()" 
