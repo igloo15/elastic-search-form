@@ -1,4 +1,4 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable, EventEmitter, Optional, SkipSelf } from '@angular/core';
 import { Client, ConfigOptions } from 'elasticsearch-browser';
 import { ESMapping } from '../models/mapping';
 import { ESSearchResults } from '../models/result';
@@ -23,7 +23,13 @@ export class ElasticConnectionService {
    */
   public isStarted = new EventEmitter<boolean>();
 
-  constructor() { }
+  constructor(@Optional() @SkipSelf() parent?: ElasticConnectionService) {
+    if (parent) {
+      throw Error(
+        `[ElasticConnectionService]: trying to create multiple instances, but this service should be a singleton`
+      );
+    }
+  }
 
   private isFixedString = (s: string) => !isNaN(+s) && isFinite(+s) && !/e/i.test(s);
 

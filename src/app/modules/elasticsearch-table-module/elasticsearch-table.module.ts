@@ -40,7 +40,7 @@ export const tableRoutes: Routes = [
         MatSlideToggleModule,
         MatSelectModule,
         NgxDatatableModule,
-        ElasticSearchServiceModule,
+        ElasticSearchServiceModule.forRoot(),
         NgxJsonViewerModule,
         RouterModule
     ],

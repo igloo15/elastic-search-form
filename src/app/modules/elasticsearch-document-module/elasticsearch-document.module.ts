@@ -29,6 +29,7 @@ import { EsFieldSelectComponent } from './components/es-field-select/es-field-se
 import { EsFieldSliderComponent } from './components/es-field-slider/es-field-slider.component';
 import { EsFieldTableComponent } from './components/es-field-table/es-field-table.component';
 import { DeCamelCasePipe } from './pipes/de-camel-case.pipe';
+import { ElasticSearchServiceModule } from '@igloo15/elasticsearch-angular-service';
 
 export const documentRoutes: Routes = [
     { path: 'document/:index/view/:id', component: EsDocumentComponent},
@@ -53,7 +54,8 @@ export const documentRoutes: Routes = [
         NgxMatDatetimePickerModule,
         NgxMatNativeDateModule,
         NgxMatTimepickerModule,
-        MatNativeDateModule
+        MatNativeDateModule,
+        ElasticSearchServiceModule.forRoot()
     ],
     exports: [
     ],
