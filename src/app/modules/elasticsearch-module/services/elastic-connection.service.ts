@@ -5,6 +5,7 @@ import { ESSearchResults } from '../models/result';
 import { SortItem } from '../models/sort';
 import { ESIndexSettings, ESIndexCreation } from '../models/index-settings';
 import { first } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 /**
  * The ElasticConnection Service
@@ -21,7 +22,7 @@ export class ElasticConnectionService {
   /**
    * Event that is emitted when connection is started
    */
-  public isStarted = new EventEmitter<boolean>();
+  public isStarted = new BehaviorSubject(false);
 
   constructor(@Optional() @SkipSelf() parent?: ElasticConnectionService) {
     if (parent) {
@@ -45,11 +46,11 @@ export class ElasticConnectionService {
         if(err) {
           this._connected = false;
           reject(err);
-          this.isStarted.emit(false);
+          this.isStarted.next(false);
         } else {
           this._connected = true;
           resolve(resp);
-          this.isStarted.emit(true);
+          this.isStarted.next(true);
         }
       });
     });

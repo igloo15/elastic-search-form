@@ -1,7 +1,7 @@
 {
   "name": "@igloo15/elasticsearch-document-editor",
   "description": "ElasticSearch angular material document editor",
-  "version": "0.9.0-dev.5",
+  "version": "0.9.0-dev.7",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/igloo15/elastic-search-form.git"
@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/igloo15/elastic-search-form#readme",
   "dependencies": {
-    "@igloo15/elasticsearch-angular-service": "0.9.0-dev.5",
+    "@igloo15/elasticsearch-angular-service": "0.9.0-dev.7",
     "@angular-material-components/datetime-picker": "^4.0.5"
   },
   "peerDependencies": {

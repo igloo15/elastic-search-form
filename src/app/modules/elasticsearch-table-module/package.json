@@ -1,7 +1,7 @@
 {
   "name": "@igloo15/elasticsearch-angular-table",
   "description": "ElasticSearch angular material table",
-  "version": "0.9.0-dev.5",
+  "version": "0.9.0-dev.7",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/igloo15/elastic-search-form.git"
@@ -19,7 +19,7 @@
   "homepage": "https://github.com/igloo15/elastic-search-form#readme",
   "dependencies": {
     "@swimlane/ngx-datatable": "^18.0.0",
-    "@igloo15/elasticsearch-angular-service": "0.9.0-dev.5",
+    "@igloo15/elasticsearch-angular-service": "0.9.0-dev.7",
     "ngx-json-viewer": "^2.4.0"
   },
   "peerDependencies": {
