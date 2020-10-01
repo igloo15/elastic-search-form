@@ -101,20 +101,22 @@ export class EsTableComponent implements OnInit, OnDestroy {
     }
     this._myParamSub = this.route.paramMap.subscribe(params => {
       const indexName = params.get('index');
-      if(this.config && this.config.index !== indexName) {
-        const newIndexConfig = this.configService.indexConfigs[indexName];
-        if (newIndexConfig) {
-          this.config = newIndexConfig;
-        } else {
-          this.config = this.configService.default;
+      if(indexName) {
+        if(this.config && this.config.index !== indexName) {
+          const newIndexConfig = this.configService.indexConfigs[indexName];
+          if (newIndexConfig) {
+            this.config = newIndexConfig;
+          } else {
+            this.config = this.configService.default;
+          }
         }
-      }
-      if (params.get('offset') && this.config) {
-        this.config.offset = +params.get('offset');
-      }
-      if (this.config) {
-        this.config.index = indexName;
-        this.startUp();
+        if (params.get('offset') && this.config) {
+          this.config.offset = +params.get('offset');
+        }
+        if (this.config) {
+          this.config.index = indexName;
+          this.startUp();
+        }
       }
     });
 
