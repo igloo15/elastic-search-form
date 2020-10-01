@@ -42,7 +42,7 @@ export class TableConfig {
 
     private _limit = 10;
 
-    public index = '';
+    public index: string;
     public showExtra = true;
     public classes = 'material';
 
