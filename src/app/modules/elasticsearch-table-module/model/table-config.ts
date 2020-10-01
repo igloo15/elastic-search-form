@@ -44,6 +44,7 @@ export class TableConfig {
 
     public index: string;
     public showExtra = true;
+    public classes = 'material';
 
     public get limit() {
         return this._limit;

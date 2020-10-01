@@ -52,7 +52,7 @@
         [scrollbarV]="config.scrollbarV"
         (page)="setPage($event)"
         (sort)="onSort($event)"
-        class="material">
+        [class]="config.classes">
         <!-- Row Detail Template -->
         <ngx-datatable-row-detail [rowHeight]="'auto'" #myDetailRow>
             <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>

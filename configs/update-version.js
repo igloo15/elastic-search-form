@@ -20,6 +20,12 @@ for(var i = 0; i < mg.length; i++) {
     const oldVersion = pkg.get("version");
     if(oldVersion !== version) {
         console.log(`Updating File: ${mg[i]}`);
+        const data = pkg.get('dependencies.@igloo15/elasticsearch-angular-service');
+        if(data) {
+            if (data.indexOf('file') === -1) {
+                pkg.set('dependencies.@igloo15/elasticsearch-angular-service', version);
+            }
+        }
         pkg.set("version", version);
         pkg.set("date", dateString);
         console.log(`Updating: ${oldVersion} -> ${version}`);
